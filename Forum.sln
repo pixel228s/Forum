@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35208.52
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forum.Web", "Forum\Forum.Web.csproj", "{1206D229-EB4F-46D8-A3DA-C67675146765}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forum.Web", "Forum.Web\Forum.Web.csproj", "{1206D229-EB4F-46D8-A3DA-C67675146765}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forum.Api", "Forum.Api\Forum.Api.csproj", "{2A7E6D14-4CDA-48D2-8B11-F33F3C2EA936}"
 EndProject
