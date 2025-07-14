@@ -1,5 +1,7 @@
+using Forum.Persistence;
 using Forum.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Forum.Api
 {
@@ -16,11 +18,7 @@ namespace Forum.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<ForumDbContext>(options =>
-            {
-                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-                options.UseSqlServer(connectionString);
-            });
+            builder.Services.AddPersistence(builder.Configuration);
 
             var app = builder.Build();
 
