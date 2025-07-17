@@ -1,4 +1,5 @@
 ﻿using Forum.Domain.Models.Base;
+using Forum.Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Persistence.Data
@@ -8,6 +9,8 @@ namespace Forum.Persistence.Data
         public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
         {
         }
+
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

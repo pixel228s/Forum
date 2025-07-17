@@ -1,6 +1,6 @@
-﻿namespace Forum.Application.Features.UserFeatures.Dtos
+﻿namespace Forum.Application.Features.UserFeatures.Queries.Models
 {
-    public class GetUser
+    public class UserDto
     {
         public int Id { get; set; }
         public string UserName { get; set; }

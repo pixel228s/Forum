@@ -1,21 +1,28 @@
 ﻿using Forum.Application.Abstractions.Messaging;
-using Forum.Application.Features.UserFeatures.Dtos;
+using Forum.Application.Features.UserFeatures.Queries.Models;
+using Forum.Domain.Models.Users;
+using Forum.Persistence.Data;
 
 namespace Forum.Application.Features.UserFeatures.Queries
 {
-    public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, GetUser>
+    public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserDto>
     {
-        public GetUserByIdQueryHandler()
+        private readonly ForumDbContext _forumDbContext;
+
+
+        public GetUserByIdQueryHandler(ForumDbContext forumDbContext)
         {
+            _forumDbContext = forumDbContext;
         }
 
-        public Task<GetUser> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
+        public async Task<UserDto> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new GetUser
-            {
-                Id = query.Id,
-                UserName = "SAlome"
-            });
+            var user = await _forumDbContext.Users
+                .FindAsync(query.Id)
+                .ConfigureAwait(false);
+
+            
+
         }
     }
 }
