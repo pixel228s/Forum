@@ -8,7 +8,7 @@ namespace Forum.Application.Features.UserFeatures.Mappers
     {
         public UserMapper()
         {
-            CreateMap<User, UserDto>();
+            CreateMap<User, UserResponse>();
         }
     }
 }

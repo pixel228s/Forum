@@ -1,7 +1,7 @@
-﻿namespace Forum.Application.Features.UserFeatures.Queries
+﻿using Forum.Application.Features.UserFeatures.Queries.Models;
+using Forum.Application.messaging.Queries;
+
+namespace Forum.Application.Features.UserFeatures.Queries
 {
-    public class GetUserByIdQuery
-    {
-        public int Id { get; set; } 
-    }
+    public record GetUserByIdQuery(int UserID) : IQuery<UserResponse>;
 }

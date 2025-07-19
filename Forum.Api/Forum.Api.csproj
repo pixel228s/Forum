@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Forum.Persistence\Forum.Persistence.csproj" />
+    <ProjectReference Include="..\Forum.Application\Forum.Application.csproj" />
   </ItemGroup>
 
 </Project>
