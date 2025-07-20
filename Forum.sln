@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forum.Persistence", "Forum.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Forum.Application", "Forum.Application\Forum.Application.csproj", "{17C757DB-4C03-4EA2-B391-AD41D567FE39}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Forum.Infrastructure", "Forum.Infrastructure\Forum.Infrastructure.csproj", "{0E570F16-A3EE-46BA-BC88-B29F3AD53243}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{17C757DB-4C03-4EA2-B391-AD41D567FE39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17C757DB-4C03-4EA2-B391-AD41D567FE39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17C757DB-4C03-4EA2-B391-AD41D567FE39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E570F16-A3EE-46BA-BC88-B29F3AD53243}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E570F16-A3EE-46BA-BC88-B29F3AD53243}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E570F16-A3EE-46BA-BC88-B29F3AD53243}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E570F16-A3EE-46BA-BC88-B29F3AD53243}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{5BA50FD7-2590-43C3-8E8A-79F49A05DDB6} = {8975DF04-F153-4085-B93B-CDE77CAE6CB2}
 		{CA0963BF-06A1-4DE8-9992-0BACBE4C2FA3} = {63BA9E2A-A14D-4C96-A626-4D9A97F93330}
 		{17C757DB-4C03-4EA2-B391-AD41D567FE39} = {8975DF04-F153-4085-B93B-CDE77CAE6CB2}
+		{0E570F16-A3EE-46BA-BC88-B29F3AD53243} = {63BA9E2A-A14D-4C96-A626-4D9A97F93330}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5157F40C-5F1E-487D-9FE2-40B80524C4BF}

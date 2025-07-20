@@ -1,4 +1,4 @@
-﻿namespace Forum.Domain.Models.Posts
+﻿namespace Forum.Domain.Models.Posts.Enums
 {
     public enum State
     {

@@ -1,4 +1,4 @@
-﻿namespace Forum.Domain.Models.Users
+﻿namespace Forum.Domain.Models.Users.Enums
 {
     public enum Roles
     {

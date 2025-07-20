@@ -8,7 +8,8 @@ namespace Forum.Application.Features.UserFeatures.Mappers
     {
         public UserMapper()
         {
-            CreateMap<User, UserResponse>();
+            CreateMap<User, UserResponse>()
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UserName));
         }
     }
 }

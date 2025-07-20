@@ -1,26 +1,31 @@
 ﻿using AutoMapper;
 using Forum.Application.Features.UserFeatures.Queries.Models;
-using Forum.Application.messaging.Queries;
-using Forum.Persistence.Data;
+using Forum.Domain.Interfaces;
+using MediatR;
 
 namespace Forum.Application.Features.UserFeatures.Queries
 {
-    public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserResponse>
+    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserResponse>
     {
-        private readonly ForumDbContext _forumDbContext;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public GetUserByIdQueryHandler(ForumDbContext forumDbContext, IMapper mapper)
+        public GetUserByIdQueryHandler(IUserRepository userRepository, IMapper mapper)
         {
-            _forumDbContext = forumDbContext;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
 
-        public async Task<UserResponse> HandleAsync(GetUserByIdQuery query, CancellationToken cancellationToken)
+        public async Task<UserResponse> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = await _forumDbContext.Users
-                .FindAsync(query.UserID)
-                .ConfigureAwait(false); 
+            var user = await _userRepository
+                .GetUserById(request.UserID, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (user == null)
+            {
+                throw new ApplicationException();
+            }
 
             return _mapper.Map<UserResponse>(user);
         }

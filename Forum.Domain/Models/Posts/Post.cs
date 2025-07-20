@@ -1,4 +1,5 @@
 ﻿using Forum.Domain.Models.Base;
+using Forum.Domain.Models.Posts.Enums;
 using Forum.Domain.Models.Users;
 
 namespace Forum.Domain.Models.Posts

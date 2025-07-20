@@ -1,4 +1,5 @@
 ﻿using Forum.Domain.Models.Posts;
+using Forum.Domain.Models.Posts.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

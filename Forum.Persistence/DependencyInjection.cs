@@ -7,12 +7,13 @@ namespace Forum.Persistence
 {
     public static class DependencyInjection
     {
-        public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<ForumDbContext>(options =>
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly(typeof(ForumDbContext).Assembly.FullName)));
+            return services;
         }
     }
 }

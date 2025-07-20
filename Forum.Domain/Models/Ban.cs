@@ -8,6 +8,6 @@ namespace Forum.Domain.Models
         public int UserId { get; set; }
         public required string BanReason { get; set; }
         public DateTime? BanEndDate { get; set; }
-        public virtual User User { get; set; }
+        public required User User { get; set; }
     }
 }

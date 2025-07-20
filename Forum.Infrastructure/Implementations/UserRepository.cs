@@ -1,0 +1,34 @@
+﻿using Forum.Domain.Interfaces;
+using Forum.Domain.Models.Users;
+using Forum.Persistence.Data;
+using Microsoft.EntityFrameworkCore;
+
+namespace Forum.Infrastructure.Implementations
+{
+    public class UserRepository : IUserRepository
+    {
+        private readonly ForumDbContext _forumDbContext;
+        public UserRepository(ForumDbContext forumDbContext)
+        {
+            _forumDbContext = forumDbContext;
+        }
+
+        public Task<User?> GetUserByEmail(string email, CancellationToken cancellationToken)
+        {
+            var user = _forumDbContext.Users
+               .Where(u => u.Email == email)
+               .AsNoTracking()
+               .FirstOrDefaultAsync(cancellationToken);
+            return user; 
+        }
+
+        public Task<User?> GetUserById(int id, CancellationToken cancellationToken)
+        {
+            var user = _forumDbContext.Users
+               .Where(u => u.Id == id)
+               .AsNoTracking()
+               .FirstOrDefaultAsync(cancellationToken);
+            return user;
+        }
+    }
+}
