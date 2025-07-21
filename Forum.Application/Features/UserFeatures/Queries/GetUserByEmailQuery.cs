@@ -1,6 +1,7 @@
-﻿namespace Forum.Application.Features.UserFeatures.Queries
+﻿using Forum.Application.Features.UserFeatures.Queries.Models;
+using MediatR;
+
+namespace Forum.Application.Features.UserFeatures.Queries
 {
-    class GetUserByEmailQuery
-    {
-    }
+    public record GetUserByEmailQuery(string email) : IRequest<UserResponse>;
 }

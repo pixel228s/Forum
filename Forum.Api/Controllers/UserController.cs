@@ -1,6 +1,7 @@
 ﻿using Forum.Application.Features.UserFeatures.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Forum.Api.Controllers
 {
@@ -16,9 +17,21 @@ namespace Forum.Api.Controllers
         }
 
         [HttpGet("user/{id}")]
+        [SwaggerResponse(200, "User found successfully")]
+        [SwaggerResponse(401, "Action not authorized")]
         public async Task<IActionResult> GetUserById(int id, CancellationToken cancellationToken)
         {
             var query = new GetUserByIdQuery(id);
+            var user = await _mediator.Send(query, cancellationToken).ConfigureAwait(false);
+            return Ok(user);
+        }
+
+        [HttpGet("user-by-email")]
+        [SwaggerResponse(200, "User found successfully")]
+        [SwaggerResponse(401, "Action not authorized")]
+        public async Task<IActionResult> GetUserById([FromQuery] string email, CancellationToken cancellationToken)
+        {
+            var query = new GetUserByEmailQuery(email);
             var user = await _mediator.Send(query, cancellationToken).ConfigureAwait(false);
             return Ok(user);
         }

@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Features\AccountFeatures\Login\" />
+    <Folder Include="Features\AccountFeatures\Registration\" />
     <Folder Include="Features\PostFeatures\" />
+    <Folder Include="Features\UserFeatures\Commands\Handlers\" />
   </ItemGroup>
 
   <ItemGroup>

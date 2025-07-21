@@ -1,3 +1,4 @@
+using Forum.Api.Infrastructure.StartupConfigurations;
 using Forum.Application.DependencyInjection;
 using Forum.Infrastructure.DependencyInjection;
 using Forum.Persistence;
@@ -23,7 +24,6 @@ namespace Forum.Api
                 .addAutoMapper()
                 .addMediator();
 
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -32,7 +32,7 @@ namespace Forum.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
