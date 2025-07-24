@@ -30,5 +30,13 @@ namespace Forum.Infrastructure.Implementations
                .FirstOrDefaultAsync(cancellationToken);
             return user;
         }
+
+        public async Task<IEnumerable<User>> GetAllUsers(CancellationToken cancellationToken)
+        {
+            var users = await _forumDbContext.Users
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+            return users;
+        }
     }
 }

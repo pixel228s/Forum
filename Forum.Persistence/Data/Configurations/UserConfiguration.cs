@@ -34,8 +34,7 @@ namespace Forum.Persistence.Data.Configurations
                 .Ignore(user => user.LockoutEnabled)
                 .Ignore(user => user.LockoutEnd)
                 .Ignore(user => user.AccessFailedCount)
-                .Ignore(user => user.NormalizedEmail)
-                .Ignore(user => user.NormalizedUserName);
+                .Ignore(user => user.NormalizedEmail);
         }
     }
 }

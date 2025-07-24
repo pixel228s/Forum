@@ -1,10 +1,12 @@
 ﻿using Forum.Domain.Models.Base;
 using Forum.Domain.Models.Users;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Persistence.Data
 {
-    public class ForumDbContext : DbContext
+    public class ForumDbContext : IdentityDbContext<User, Role, int>
     {
         public ForumDbContext(DbContextOptions<ForumDbContext> options) : base(options)
         {
@@ -15,6 +17,10 @@ namespace Forum.Persistence.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Ignore<IdentityUserToken<int>>();
+            modelBuilder.Ignore<IdentityUserLogin<int>>();
+            modelBuilder.Entity<IdentityUserClaim<int>>().ToTable("UserClaims");
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ForumDbContext).Assembly);
         }
 

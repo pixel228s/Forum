@@ -7,12 +7,11 @@ namespace Forum.Domain.Models.Users
     {
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
-        public bool IsAdmin { get; set; }
         public string? picUrl { get; set; }
         public bool IsBanned { get; set; }
 
-        public virtual Ban? BanInfo {  get; set; } 
-        public virtual ICollection<Post>? Posts { get; } = new List<Post>();
-        public virtual ICollection<Comment>? Comments { get; } = new List<Comment>();
+        public Ban? BanInfo {  get; set; } 
+        public ICollection<Post>? Posts { get; } = new List<Post>();
+        public ICollection<Comment>? Comments { get; } = new List<Comment>();
     }
 }

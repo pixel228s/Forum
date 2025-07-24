@@ -1,5 +1,4 @@
 ﻿using Forum.Application.Exceptions.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;

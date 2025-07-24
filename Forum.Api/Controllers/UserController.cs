@@ -1,4 +1,5 @@
-﻿using Forum.Application.Features.UserFeatures.Queries;
+﻿using Forum.Application.Features.AccountFeatures.Commands.Registration;
+using Forum.Application.Features.UserFeatures.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -26,7 +27,7 @@ namespace Forum.Api.Controllers
             return Ok(user);
         }
 
-        [HttpGet("user-by-email")]
+        [HttpGet]
         [SwaggerResponse(200, "User found successfully")]
         [SwaggerResponse(401, "Action not authorized")]
         public async Task<IActionResult> GetUserById([FromQuery] string email, CancellationToken cancellationToken)
@@ -34,6 +35,13 @@ namespace Forum.Api.Controllers
             var query = new GetUserByEmailQuery(email);
             var user = await _mediator.Send(query, cancellationToken).ConfigureAwait(false);
             return Ok(user);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
+            return Ok(result);
         }
     }
 }

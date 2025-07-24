@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using Forum.Application.Features.AccountFeatures.Commands.Registration;
 using Forum.Application.Features.UserFeatures.Queries.Models;
 using Forum.Domain.Models.Users;
 
-namespace Forum.Application.Features.UserFeatures.Mappers
+namespace Forum.Application.Common.Mappers
 {
     public class UserMapper : Profile
     {
@@ -10,6 +11,8 @@ namespace Forum.Application.Features.UserFeatures.Mappers
         {
             CreateMap<User, UserResponse>()
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UserName));
+
+            CreateMap<RegisterUserCommand, User>();
         }
     }
 }
