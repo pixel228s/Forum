@@ -27,7 +27,8 @@ namespace Forum.Application.Features.AccountFeatures.Commands.Registration
             if (!result.Succeeded)
             {
                 string message = string.Join("; ", result.Errors.Select(e => e.Description));
-                throw new RegistrationException(message);
+                Console.WriteLine(message);
+                throw new RegistrationException(message : message);
             }
 
             await _userManager.AddToRoleAsync(user, "Member");

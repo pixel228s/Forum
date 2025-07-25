@@ -18,7 +18,8 @@ namespace Forum.Persistence.Data.Configurations
                 .IsRequired()
                 .HasMaxLength(120)
                 .IsFixedLength()
-                .HasColumnType("varchar");
+                .HasColumnType("varchar")
+                .IsUnicode(false);
 
             builder.Property(x => x.UserName)
                 .IsRequired()
@@ -33,8 +34,7 @@ namespace Forum.Persistence.Data.Configurations
                 .Ignore(user => user.TwoFactorEnabled)
                 .Ignore(user => user.LockoutEnabled)
                 .Ignore(user => user.LockoutEnd)
-                .Ignore(user => user.AccessFailedCount)
-                .Ignore(user => user.NormalizedEmail);
+                .Ignore(user => user.AccessFailedCount);
         }
     }
 }

@@ -6,6 +6,6 @@
         public virtual string Title { get; } = "Application Error Occured";
 
         public AppException() { }
-        public AppException(string message) : base(message = "application exception") { }
+        public AppException(string message) : base(message) { }
     }
 }

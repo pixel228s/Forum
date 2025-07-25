@@ -1,6 +1,7 @@
-﻿namespace Forum.Application.Features.AccountFeatures.Queries.Login
+﻿using Forum.Application.Features.AccountFeatures.Queries.Login.Models;
+using MediatR;
+
+namespace Forum.Application.Features.AccountFeatures.Queries.Login
 {
-    public class LoginQuery
-    {
-    }
+    public record LoginQuery(string username, string password) : IRequest<AuthResponse>;
 }

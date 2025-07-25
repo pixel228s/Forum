@@ -24,13 +24,6 @@ namespace Forum.Persistence.Data.Configurations
                     Name = "Member",
                     NormalizedName = "MEMBER",
                     Description = "Member role for the user"
-                },
-                new Role
-                {
-                    Id = 3,
-                    Name = "Guest",
-                    NormalizedName = "GUEST",
-                    Description = "Guest role for the user"
                 }
             );   
         }

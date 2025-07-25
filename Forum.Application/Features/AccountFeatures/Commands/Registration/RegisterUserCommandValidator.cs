@@ -16,8 +16,7 @@ namespace Forum.Application.Features.AccountFeatures.Commands.Registration
                 .MaximumLength(16).WithMessage("Your password length must not exceed 16.")
                 .Matches(@"[A-Z]+").WithMessage("Your password must contain at least one uppercase letter.")
                 .Matches(@"[a-z]+").WithMessage("Your password must contain at least one lowercase letter.")
-                .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.")
-                .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one special character.");
+                .Matches(@"[0-9]+").WithMessage("Your password must contain at least one number.");
 
             RuleFor(c => c.Email)
                 .NotEmpty().WithMessage("Your email can't be emoty.")

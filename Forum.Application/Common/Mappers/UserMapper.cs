@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Forum.Application.Features.AccountFeatures.Commands.Registration;
+using Forum.Application.Features.AccountFeatures.Queries.Login.Models;
 using Forum.Application.Features.UserFeatures.Queries.Models;
 using Forum.Domain.Models.Users;
 
@@ -13,6 +14,9 @@ namespace Forum.Application.Common.Mappers
                 .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UserName));
 
             CreateMap<RegisterUserCommand, User>();
+
+            CreateMap<User, AuthResponse>()
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UserName));
         }
     }
 }

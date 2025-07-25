@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Forum.Api.Controllers
 {
-    [Route("api/")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -38,6 +38,7 @@ namespace Forum.Api.Controllers
         }
 
         [HttpPost]
+        [SwaggerResponse(201, "User created successfully")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);

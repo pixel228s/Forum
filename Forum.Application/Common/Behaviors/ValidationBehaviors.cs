@@ -24,7 +24,7 @@ namespace Forum.Application.Common.Behaviors
                 .Select(validator => validator.Validate(context))
                 .SelectMany(result => result.Errors)
                 .Where(failure => failure is not null)
-                .ToList();
+                .AsEnumerable();
 
             if (failures.Any())
             {

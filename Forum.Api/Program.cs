@@ -21,8 +21,11 @@ namespace Forum.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<ForumDbContext>();
+            builder.Services.AddIdentity<User, Role>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<ForumDbContext>();
 
 
             builder.Services
