@@ -1,11 +1,13 @@
 ﻿using Forum.Application.Features.AccountFeatures.Commands.Registration;
 using Forum.Application.Features.UserFeatures.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Forum.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -35,14 +37,6 @@ namespace Forum.Api.Controllers
             var query = new GetUserByEmailQuery(email);
             var user = await _mediator.Send(query, cancellationToken).ConfigureAwait(false);
             return Ok(user);
-        }
-
-        [HttpPost]
-        [SwaggerResponse(201, "User created successfully")]
-        public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
-            return Ok(result);
         }
     }
 }

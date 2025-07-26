@@ -1,3 +1,4 @@
+using Forum.Api.Extensions;
 using Forum.Api.Infrastructure.StartupConfigurations;
 using Forum.Application.DependencyInjection;
 using Forum.Domain.Models.Users;
@@ -5,6 +6,7 @@ using Forum.Infrastructure.DependencyInjection;
 using Forum.Persistence;
 using Forum.Persistence.Data;
 using Microsoft.AspNetCore.Identity;
+
 
 namespace Forum.Api
 {
@@ -20,16 +22,13 @@ namespace Forum.Api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-            builder.Services.AddIdentity<User, Role>(options =>
-            {
-                options.User.RequireUniqueEmail = true;
-            })
-            .AddEntityFrameworkStores<ForumDbContext>();
-
-
+            
             builder.Services
+                .AddSwaggerConfigurations()
+                .AddIdentity()
+                .AddJwtConfiguration(builder.Configuration)
                 .AddPersistence(builder.Configuration)
+                .AddTokenProvider()
                 .AddCustomValidation()
                 .addServices()
                 .addAutoMapper()
@@ -46,9 +45,9 @@ namespace Forum.Api
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
-
+           
             app.MapControllers();
 
             app.Run();
