@@ -29,14 +29,9 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
                 bool isPasswordCorrect = await _userManager.CheckPasswordAsync(user, request.password);
                 if (isPasswordCorrect)
                 {
-                    var response = new TokenDto();
                     var roles = await _userManager.GetRolesAsync(user);
-                    response.Token = _tokenProvider.GetToken(user, roles);
-                    response.RefreshToken = _tokenProvider.GenerateRefreshToken();
-                    user.RefreshToken = response.RefreshToken;
-                    user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(8);
-                    await _userManager.UpdateAsync(user);
-                    return response;
+                    var tokenDto = await _tokenProvider.CreateToken(user, roles, populateDate: true);
+                    return tokenDto;
                 }
             }
             throw new AuthenticationException();

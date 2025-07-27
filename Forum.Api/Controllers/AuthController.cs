@@ -4,6 +4,7 @@ using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.NewPassw
 using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.SendOtp;
 using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.Validate;
 using Forum.Application.Features.AccountFeatures.Queries.Login;
+using Forum.Application.Features.AccountFeatures.Queries.Refresh;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,8 +30,15 @@ namespace Forum.Api.Controllers
             return Ok(result);
         }
 
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command)
+        {
+            var result = _mediator.Send(command).ConfigureAwait(false);
+            return Ok(result);
+        }
+
         [HttpPost]
-        [SwaggerResponse(201, "User created successfully")]
+        [SwaggerResponse(200, "User created successfully")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
@@ -59,7 +67,7 @@ namespace Forum.Api.Controllers
         [HttpPost("validate")]
         public async Task<ActionResult> ValidateOtp([FromBody] ValidateOtpCommand command, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(new
             {
                 ResetToken = result
@@ -69,7 +77,7 @@ namespace Forum.Api.Controllers
         [HttpPost("reset-password")]
         public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(new
             {
                 Message = "Password reset successfully!"

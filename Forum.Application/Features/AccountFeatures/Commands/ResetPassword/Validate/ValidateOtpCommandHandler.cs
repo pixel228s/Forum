@@ -1,4 +1,5 @@
-﻿using Forum.Domain.Models.Users;
+﻿using Forum.Application.Exceptions.Models;
+using Forum.Domain.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
@@ -24,7 +25,7 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ResetPassword.Vali
             var isValid = await _userManager.VerifyTwoFactorTokenAsync(user, "ResetPassword", request.Otp);
             if (!isValid)
             {
-                return null;
+                throw new AppException("invalid otp code");
             }
 
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);

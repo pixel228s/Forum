@@ -1,4 +1,7 @@
-﻿using Forum.Domain.Models.Users;
+﻿using Forum.Application.Exceptions.Models;
+using Forum.Application.Features.AccountFeatures.Queries.Login.Models;
+using Forum.Domain.Models.Users;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,22 +14,34 @@ namespace Forum.Application.Common.SecurityService
     public class TokenProvider : ITokenProvider
     {
         private readonly IConfiguration _configuration;
+        private readonly UserManager<User> _userManager;
 
-        public TokenProvider(IConfiguration configuration)
+        public TokenProvider(IConfiguration configuration, UserManager<User> userManager)
         {
             _configuration = configuration;
+            _userManager = userManager;
         }
 
-        public string GetToken(User user, IList<string> roles)
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        public async Task<TokenDto> CreateToken(User user, IList<string> roles, bool populateDate)
         {
             var authConfigs = _configuration.GetSection("Authentication");
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authConfigs["SecretForKey"]));
             var signInCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
-            {
-               new(ClaimTypes.Name, user.UserName),
-               new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            };
+                {
+                   new(ClaimTypes.Name, user.UserName),
+                   new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                };
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var jwtSecurityToken = new JwtSecurityToken(
@@ -39,17 +54,47 @@ namespace Forum.Application.Common.SecurityService
             );
 
             var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            return tokenToReturn;
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshToken = refreshToken;
+            if (populateDate)
+            {
+                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+            }
+            await _userManager.UpdateAsync(user);
+
+            return new TokenDto 
+            { 
+                RefreshToken = refreshToken,
+                Token = tokenToReturn
+            };
         }
 
-        public string GenerateRefreshToken()
+        public ClaimsPrincipal GetClaimsPrincipal(string token)
         {
-            var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
+            var jwtSetting = _configuration.GetSection("Authentication");
+            var tokenValidationParameters = new TokenValidationParameters
             {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
+
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+                ValidIssuer = _configuration["Issuer"],
+                ValidAudience = _configuration["Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecretForKey"]))
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+            if (jwtSecurityToken != null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new SecurityTokenException("invalid token");
             }
+
+            return principal;   
         }
     }
 }

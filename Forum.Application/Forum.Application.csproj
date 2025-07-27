@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\AccountFeatures\Queries\Refresh\" />
     <Folder Include="Features\PostFeatures\" />
     <Folder Include="Features\UserFeatures\Commands\Handlers\" />
   </ItemGroup>
