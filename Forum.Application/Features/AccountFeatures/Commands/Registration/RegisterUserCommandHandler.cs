@@ -27,7 +27,6 @@ namespace Forum.Application.Features.AccountFeatures.Commands.Registration
             if (!result.Succeeded)
             {
                 string message = string.Join("; ", result.Errors.Select(e => e.Description));
-                Console.WriteLine(message);
                 throw new RegistrationException(message : message);
             }
 

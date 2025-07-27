@@ -2,7 +2,7 @@
 {
     public class AppException : Exception
     {
-        public virtual int StatusCode { get; } = 500;
+        public virtual int StatusCode { get; } = 400;
         public virtual string Title { get; } = "Application Error Occured";
 
         public AppException() { }

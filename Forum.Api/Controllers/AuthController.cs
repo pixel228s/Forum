@@ -1,5 +1,8 @@
 ﻿using Forum.Application.Features.AccountFeatures.Commands.ChangePassword;
 using Forum.Application.Features.AccountFeatures.Commands.Registration;
+using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.NewPassword;
+using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.SendOtp;
+using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.Validate;
 using Forum.Application.Features.AccountFeatures.Queries.Login;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -40,6 +43,37 @@ namespace Forum.Api.Controllers
         {
             var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(result);
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult> ForgotPasswordAsync([FromBody] ForgotPasswordCommand request, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(request, cancellationToken)
+                .ConfigureAwait(false);
+            return Ok(new
+            {
+                Message = "The code has been successfully sent to the respective email."
+            });
+        }
+
+        [HttpPost("validate")]
+        public async Task<ActionResult> ValidateOtp([FromBody] ValidateOtpCommand command, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(new
+            {
+                ResetToken = result
+            });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordCommand command, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(new
+            {
+                Message = "Password reset successfully!"
+            });
         }
     }
 }

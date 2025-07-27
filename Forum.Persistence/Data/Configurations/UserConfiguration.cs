@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Forum.Persistence.Data.Configurations
 {
-    public class UserConfiguration : IEntityTypeConfiguration<User>
+    public sealed class UserConfiguration : IEntityTypeConfiguration<User>
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
@@ -13,6 +13,8 @@ namespace Forum.Persistence.Data.Configurations
             builder.HasKey(x => x.Id);
 
             builder.HasIndex(x => x.Email).IsUnique();
+
+            builder.Property(x => x.RefreshToken).HasMaxLength(50);
 
             builder.Property(x => x.Email)
                 .IsRequired()

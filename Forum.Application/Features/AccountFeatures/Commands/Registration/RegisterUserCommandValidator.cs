@@ -21,7 +21,7 @@ namespace Forum.Application.Features.AccountFeatures.Commands.Registration
             RuleFor(c => c.Email)
                 .NotEmpty().WithMessage("Your email can't be emoty.")
                 .Matches(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,})+)$")
-                .WithMessage("Your email should be in correct format");
+                .EmailAddress();
 
             RuleFor(c => c.FirstName)
                 .NotEmpty().WithMessage("Your first name can't be empty");

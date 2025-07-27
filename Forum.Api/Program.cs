@@ -26,6 +26,7 @@ namespace Forum.Api
             builder.Services
                 .AddSwaggerConfigurations()
                 .AddIdentity()
+                .AddMailSender(builder.Configuration)
                 .AddJwtConfiguration(builder.Configuration)
                 .AddPersistence(builder.Configuration)
                 .AddTokenProvider()

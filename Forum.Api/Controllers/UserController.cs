@@ -1,5 +1,4 @@
-﻿using Forum.Application.Features.AccountFeatures.Commands.Registration;
-using Forum.Application.Features.UserFeatures.Queries;
+﻿using Forum.Application.Features.UserFeatures.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +20,7 @@ namespace Forum.Api.Controllers
 
         [HttpGet("user/{id}")]
         [SwaggerResponse(200, "User found successfully")]
+        [SwaggerResponse(404, "User not found")]
         [SwaggerResponse(401, "Action not authorized")]
         public async Task<IActionResult> GetUserById(int id, CancellationToken cancellationToken)
         {
@@ -31,6 +31,7 @@ namespace Forum.Api.Controllers
 
         [HttpGet]
         [SwaggerResponse(200, "User found successfully")]
+        [SwaggerResponse(404, "User not found")]
         [SwaggerResponse(401, "Action not authorized")]
         public async Task<IActionResult> GetUserById([FromQuery] string email, CancellationToken cancellationToken)
         {

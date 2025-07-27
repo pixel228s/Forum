@@ -7,6 +7,8 @@ namespace Forum.Domain.Models.Users
     {
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
         public string? picUrl { get; set; }
         public bool IsBanned { get; set; }
 

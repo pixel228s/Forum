@@ -1,4 +1,5 @@
-﻿using Forum.Domain.Models.Users;
+﻿using Forum.Application.Common.CustomTokenProviders;
+using Forum.Domain.Models.Users;
 using Forum.Persistence.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -14,10 +15,22 @@ namespace Forum.Api.Extensions
         {
              services.AddIdentity<User, Role>(options =>
              {
-                options.User.RequireUniqueEmail = true;
+                 options.User.RequireUniqueEmail = true;
+                 options.Password = new PasswordOptions
+                 {
+                     RequireDigit = true,
+                     RequireLowercase = true,
+                     RequireNonAlphanumeric = true,
+                     RequireUppercase = true,
+                     RequiredLength = 8,
+                     RequiredUniqueChars = 3,
+                 };
              })
             .AddEntityFrameworkStores<ForumDbContext>()
+            .AddTokenProvider<ResetPasswordTokenProvider<User>>("ResetPassword")
             .AddDefaultTokenProviders();
+            services
+                .Configure<DataProtectionTokenProviderOptions>(options => options.TokenLifespan = TimeSpan.FromHours(1));
             return services;
         }
 

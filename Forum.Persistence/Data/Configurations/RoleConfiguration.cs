@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Forum.Persistence.Data.Configurations
 {
-    class RoleConfiguration : IEntityTypeConfiguration<Role>
+    public sealed class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Forum.Application.Features.AccountFeatures.Queries.Login
 {
-    public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthResponse>
+    public class LoginQueryHandler : IRequestHandler<LoginQuery, TokenDto>
     {
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
@@ -21,7 +21,7 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
             _tokenProvider = tokenProvider;
         }
 
-        public async Task<AuthResponse> Handle(LoginQuery request, CancellationToken cancellationToken)
+        public async Task<TokenDto> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByNameAsync(request.username);
             if (user != null)
@@ -29,9 +29,13 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
                 bool isPasswordCorrect = await _userManager.CheckPasswordAsync(user, request.password);
                 if (isPasswordCorrect)
                 {
-                    var response = _mapper.Map<AuthResponse>(user);
+                    var response = new TokenDto();
                     var roles = await _userManager.GetRolesAsync(user);
                     response.Token = _tokenProvider.GetToken(user, roles);
+                    response.RefreshToken = _tokenProvider.GenerateRefreshToken();
+                    user.RefreshToken = response.RefreshToken;
+                    user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(8);
+                    await _userManager.UpdateAsync(user);
                     return response;
                 }
             }

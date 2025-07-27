@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Forum.Persistence.Data.Configurations
 {
-    public class BanConfiguration : IEntityTypeConfiguration<Ban>
+    public sealed class BanConfiguration : IEntityTypeConfiguration<Ban>
     {
         public void Configure(EntityTypeBuilder<Ban> builder)
         {

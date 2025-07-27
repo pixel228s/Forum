@@ -1,6 +1,9 @@
 ﻿using FluentValidation;
 using Forum.Application.Common.Behaviors;
+using Forum.Application.Common.EmailSender.Models;
+using Forum.Application.Common.EmailSender;
 using Forum.Application.Common.SecurityService;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Forum.Application.DependencyInjection
@@ -32,6 +35,14 @@ namespace Forum.Application.DependencyInjection
         public static IServiceCollection AddTokenProvider(this IServiceCollection services)
         {
             services.AddScoped<ITokenProvider, TokenProvider>();
+            return services;
+        }
+
+        public static IServiceCollection AddMailSender(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<IEmailSender, EmailSender>();
+            services.Configure<EmailSenderOptions>(configuration.GetSection(EmailSenderOptions.Key));
+
             return services;
         }
     }

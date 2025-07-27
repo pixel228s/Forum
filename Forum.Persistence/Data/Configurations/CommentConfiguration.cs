@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Forum.Persistence.Data.Configurations
 {
-    public class CommentConfiguration : IEntityTypeConfiguration<Comment>
+    public sealed class CommentConfiguration : IEntityTypeConfiguration<Comment>
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {

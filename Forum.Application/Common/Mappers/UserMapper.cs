@@ -15,8 +15,8 @@ namespace Forum.Application.Common.Mappers
 
             CreateMap<RegisterUserCommand, User>();
 
-            CreateMap<User, AuthResponse>()
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UserName));
+            //CreateMap<User, TokenDto>()
+            //    .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UserName));
         }
     }
 }
