@@ -31,7 +31,9 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Refresh
                 throw new AppException();
             }
             var roles = await _userManager.GetRolesAsync(user);
-            return await _tokenProvider.CreateToken(user, roles, populateDate: false);
+            var tokenDto = await _tokenProvider.CreateToken(user, roles);
+            user.RefreshToken = tokenDto.RefreshToken;
+            return tokenDto;
         }
     }
 }

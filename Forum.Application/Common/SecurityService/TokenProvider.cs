@@ -1,7 +1,5 @@
-﻿using Forum.Application.Exceptions.Models;
-using Forum.Application.Features.AccountFeatures.Queries.Login.Models;
+﻿using Forum.Application.Features.AccountFeatures.Queries.Login.Models;
 using Forum.Domain.Models.Users;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -14,12 +12,10 @@ namespace Forum.Application.Common.SecurityService
     public class TokenProvider : ITokenProvider
     {
         private readonly IConfiguration _configuration;
-        private readonly UserManager<User> _userManager;
 
-        public TokenProvider(IConfiguration configuration, UserManager<User> userManager)
+        public TokenProvider(IConfiguration configuration)
         {
             _configuration = configuration;
-            _userManager = userManager;
         }
 
         public string GenerateRefreshToken()
@@ -32,7 +28,7 @@ namespace Forum.Application.Common.SecurityService
             }
         }
 
-        public async Task<TokenDto> CreateToken(User user, IList<string> roles, bool populateDate)
+        public async Task<TokenDto> CreateToken(User user, IList<string> roles)
         {
             var authConfigs = _configuration.GetSection("Authentication");
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authConfigs["SecretForKey"]));
@@ -55,12 +51,6 @@ namespace Forum.Application.Common.SecurityService
 
             var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             var refreshToken = GenerateRefreshToken();
-            user.RefreshToken = refreshToken;
-            if (populateDate)
-            {
-                user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
-            }
-            await _userManager.UpdateAsync(user);
 
             return new TokenDto 
             { 

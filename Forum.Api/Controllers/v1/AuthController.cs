@@ -10,10 +10,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Forum.Api.Controllers
+namespace Forum.Api.Controllers.v1
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/v{apiVersion:apiVersion}/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -37,7 +37,7 @@ namespace Forum.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         [SwaggerResponse(200, "User created successfully")]
         public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
         {

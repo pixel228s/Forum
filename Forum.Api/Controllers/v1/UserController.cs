@@ -1,14 +1,16 @@
-﻿using Forum.Application.Features.UserFeatures.Queries;
+﻿using Asp.Versioning;
+using Forum.Application.Features.UserFeatures.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace Forum.Api.Controllers
+namespace Forum.Api.Controllers.v1
 {
     [Authorize]
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    //[ApiVersion("1.0")]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;

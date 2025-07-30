@@ -24,6 +24,7 @@ namespace Forum.Api
             builder.Services.AddSwaggerGen();
             
             builder.Services
+                .AddVersioning()
                 .AddSwaggerConfigurations()
                 .AddIdentity()
                 .AddMailSender(builder.Configuration)

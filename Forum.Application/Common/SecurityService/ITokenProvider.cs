@@ -6,9 +6,7 @@ namespace Forum.Application.Common.SecurityService
 {
     public interface ITokenProvider
     {
-        Task<TokenDto> CreateToken(User user, IList<string> roles, bool populateDate);
+        Task<TokenDto> CreateToken(User user, IList<string> roles);
         ClaimsPrincipal GetClaimsPrincipal(string token);
-
-        //string GenerateRefreshToken();
     }
 }

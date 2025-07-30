@@ -26,11 +26,20 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
             var user = await _userManager.FindByNameAsync(request.username);
             if (user != null)
             {
+                if (user.IsBanned)
+                {
+
+                }
+
                 bool isPasswordCorrect = await _userManager.CheckPasswordAsync(user, request.password);
                 if (isPasswordCorrect)
                 {
                     var roles = await _userManager.GetRolesAsync(user);
-                    var tokenDto = await _tokenProvider.CreateToken(user, roles, populateDate: true);
+                    var tokenDto = await _tokenProvider.CreateToken(user, roles);
+
+                    user.RefreshToken = tokenDto.RefreshToken;
+                    user.RefreshTokenExpiryTime  = DateTime.UtcNow;
+                    await _userManager.UpdateAsync(user);
                     return tokenDto;
                 }
             }

@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Features\AdminFeatures\Commands\NewFolder\" />
+    <Folder Include="Features\AdminFeatures\Commands\UnbanUser\" />
+    <Folder Include="Features\AdminFeatures\Queries\" />
     <Folder Include="Features\PostFeatures\" />
     <Folder Include="Features\UserFeatures\Commands\Handlers\" />
   </ItemGroup>
