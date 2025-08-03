@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Dtos\Auth\" />
     <Folder Include="Features\AdminFeatures\Commands\NewFolder\" />
     <Folder Include="Features\AdminFeatures\Commands\UnbanUser\" />
     <Folder Include="Features\AdminFeatures\Queries\" />
-    <Folder Include="Features\PostFeatures\Queries\" />
-    <Folder Include="Features\UserFeatures\Commands\Handlers\" />
+    <Folder Include="Features\PostFeatures\Queries\GetAllPosts\" />
+    <Folder Include="Features\PostFeatures\Queries\RetrievePendingPosts\" />
+    <Folder Include="Features\UserFeatures\Commands\" />
   </ItemGroup>
 
   <ItemGroup>

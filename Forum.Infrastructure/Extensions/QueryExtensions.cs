@@ -15,5 +15,11 @@ namespace Forum.Infrastructure.Extensions
             }
             return source;
         }
+
+        public static IQueryable<T> AllowQueryFilters<T>(this IQueryable<T> source, bool isAllowed)
+            where T : class
+        {
+            return isAllowed ? source.IgnoreQueryFilters() : source;
+        }
     }
 }

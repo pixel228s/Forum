@@ -1,4 +1,4 @@
-﻿using Forum.Domain.Models;
+﻿using Forum.Domain.Entities.Comments;
 using Forum.Domain.Models.Base;
 using Forum.Domain.Models.Posts;
 using Forum.Domain.Models.Users;

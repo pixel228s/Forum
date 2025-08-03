@@ -1,4 +1,4 @@
-﻿using Forum.Domain.Models;
+﻿using Forum.Domain.Entities.Comments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

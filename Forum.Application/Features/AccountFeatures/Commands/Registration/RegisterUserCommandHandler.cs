@@ -30,7 +30,8 @@ namespace Forum.Application.Features.AccountFeatures.Commands.Registration
                 throw new RegistrationException(message : message);
             }
 
-            await _userManager.AddToRoleAsync(user, "Member");
+            await _userManager.AddToRoleAsync(user, "Member")
+                .ConfigureAwait(false);
 
             return result;
         }

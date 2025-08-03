@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using Forum.Application.Common.Dtos.Auth.Responses;
 using Forum.Application.Common.SecurityService;
 using Forum.Application.Exceptions;
-using Forum.Application.Features.AccountFeatures.Queries.Login.Models;
 using Forum.Domain.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -26,20 +26,22 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
             var user = await _userManager.FindByNameAsync(request.username);
             if (user != null)
             {
-                if (user.IsBanned)
-                {
+                //if (user.IsBanned)
+                //{
 
-                }
+                //}
 
                 bool isPasswordCorrect = await _userManager.CheckPasswordAsync(user, request.password);
                 if (isPasswordCorrect)
                 {
-                    var roles = await _userManager.GetRolesAsync(user);
-                    var tokenDto = await _tokenProvider.CreateToken(user, roles);
+                    var roles = await _userManager.GetRolesAsync(user)
+                        .ConfigureAwait(false);
+                    var tokenDto = await _tokenProvider.CreateToken(user, roles)
+                        .ConfigureAwait(false);
 
                     user.RefreshToken = tokenDto.RefreshToken;
                     user.RefreshTokenExpiryTime  = DateTime.UtcNow.AddDays(7);
-                    await _userManager.UpdateAsync(user);
+                    await _userManager.UpdateAsync(user).ConfigureAwait(false);
                     return tokenDto;
                 }
             }

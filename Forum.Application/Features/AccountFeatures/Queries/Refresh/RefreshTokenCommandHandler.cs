@@ -1,6 +1,6 @@
-﻿using Forum.Application.Common.SecurityService;
+﻿using Forum.Application.Common.Dtos.Auth.Responses;
+using Forum.Application.Common.SecurityService;
 using Forum.Application.Exceptions.Models;
-using Forum.Application.Features.AccountFeatures.Queries.Login.Models;
 using Forum.Domain.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -22,7 +22,7 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Refresh
         public async Task<TokenDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var principal = _tokenProvider.GetClaimsPrincipal(request.AccessToken);
-            var user = await _userManager.FindByNameAsync(principal.Identity!.Name!);
+            var user = await _userManager.FindByNameAsync(principal.Identity!.Name!).ConfigureAwait(false);
 
             if (user == null
                 || user.RefreshToken != request.RefreshToken
@@ -30,8 +30,8 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Refresh
             {
                 throw new AppException();
             }
-            var roles = await _userManager.GetRolesAsync(user);
-            var tokenDto = await _tokenProvider.CreateToken(user, roles);
+            var roles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+            var tokenDto = await _tokenProvider.CreateToken(user, roles).ConfigureAwait(false);
             user.RefreshToken = tokenDto.RefreshToken;
             return tokenDto;
         }

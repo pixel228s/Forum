@@ -1,4 +1,5 @@
-﻿using Forum.Domain.Models.Base;
+﻿using Forum.Domain.Entities.Comments;
+using Forum.Domain.Models.Base;
 using Forum.Domain.Models.Posts.Enums;
 using Forum.Domain.Models.Users;
 
@@ -13,6 +14,6 @@ namespace Forum.Domain.Models.Posts
         public string? Title { get; set; }
 
         public User User { get; set; }
-        public IQueryable<Comment>? comments { get; set; }
+        public ICollection<Comment>? comments { get; set; }
     }
 }

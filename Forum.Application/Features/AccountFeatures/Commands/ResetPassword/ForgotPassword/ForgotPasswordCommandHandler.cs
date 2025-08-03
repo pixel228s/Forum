@@ -25,13 +25,15 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ResetPassword.Send
         public async Task<Unit> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepository
-                .GetUserByEmail(request.Email, cancellationToken);
+                .GetUserByEmail(request.Email, cancellationToken)
+                .ConfigureAwait(false);
             if (user == null)
             {
                 return Unit.Value;
             }
             var otp = await _userManager
-                .GenerateTwoFactorTokenAsync(user!, "ResetPassword");
+                .GenerateTwoFactorTokenAsync(user!, "ResetPassword")
+                .ConfigureAwait(false);
 
             await _emailSender.SendEmailAsync(request.Email, subject: "Otp", otp);
             return Unit.Value; 

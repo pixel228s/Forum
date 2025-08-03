@@ -1,4 +1,5 @@
-﻿using Forum.Domain.Models.Posts;
+﻿using Forum.Domain.Entities.Comments;
+using Forum.Domain.Models.Posts;
 using Microsoft.AspNetCore.Identity;
 
 namespace Forum.Domain.Models.Users
@@ -13,7 +14,7 @@ namespace Forum.Domain.Models.Users
         public bool IsBanned { get; set; }
 
         public Ban? BanInfo {  get; set; } 
-        public IQueryable<Post>? Posts { get; } 
-        public IQueryable<Comment>? Comments { get; }
+        public ICollection<Post>? Posts { get; } 
+        public ICollection<Comment>? Comments { get; }
     }
 }

@@ -16,19 +16,22 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ResetPassword.Vali
 
         public async Task<string?> Handle(ValidateOtpCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email).ConfigureAwait(false);
             if (user == null)
             {
                 return null;
             }
 
-            var isValid = await _userManager.VerifyTwoFactorTokenAsync(user, "ResetPassword", request.Otp);
+            var isValid = await _userManager.VerifyTwoFactorTokenAsync(user, "ResetPassword", request.Otp)
+                .ConfigureAwait(false);
             if (!isValid)
             {
                 throw new AppException("invalid otp code");
             }
 
-            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetToken = await _userManager
+                .GeneratePasswordResetTokenAsync(user)
+                .ConfigureAwait(false);
             return resetToken;
         }
     }

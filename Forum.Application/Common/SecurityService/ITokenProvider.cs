@@ -1,4 +1,4 @@
-﻿using Forum.Application.Features.AccountFeatures.Queries.Login.Models;
+﻿using Forum.Application.Common.Dtos.Auth.Responses;
 using Forum.Domain.Models.Users;
 using System.Security.Claims;
 

@@ -1,6 +1,6 @@
-﻿namespace Forum.Application.Features.AccountFeatures.Commands.ChangePassword.Models
+﻿namespace Forum.Application.Common.Dtos.Auth.Responses
 {
-    public class Response
+    public class ChangePasswordResponse
     {
         private readonly string SuccessMessage = "Password changed successfully";
 

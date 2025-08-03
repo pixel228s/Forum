@@ -20,7 +20,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.DeletePost
 
         public async Task<Unit> Handle(DeletePostCommand request, CancellationToken cancellationToken)
         {
-            var post = await _postRepository.GetPostByIdAsync(request.PostId, cancellationToken, false);
+            var post = await _postRepository.GetPostByIdAsync(request.PostId, cancellationToken, false, false);
 
             if (post == null)
             {

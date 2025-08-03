@@ -1,5 +1,4 @@
-﻿using Asp.Versioning;
-using Forum.Application.Features.UserFeatures.Queries;
+﻿using Forum.Application.Features.UserFeatures.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -44,10 +44,11 @@ namespace Forum.Infrastructure.Implementations
             return hiddenPosts;
         }
 
-        public Task<Post?> GetPostByIdAsync(int id, CancellationToken cancellationToken, bool isIncluded)
+        public Task<Post?> GetPostByIdAsync(int id, CancellationToken cancellationToken, bool isIncluded, bool isAllowed)
         {
             var post = _dbSet
                 .AsNoTracking()
+                .AllowQueryFilters(isAllowed)
                 .Where(x => x.Id == id)
                 .CustomInclude(x => x.User!, isIncluded)
                 .FirstOrDefaultAsync(cancellationToken);
@@ -55,19 +56,13 @@ namespace Forum.Infrastructure.Implementations
             return post;
         }
 
-        public Task<int> GetPostCountByUserAsync(int userId, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<Post>> GetPostsWithCommentsByUser(string username, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Post>> GetPostsByUserId(int userId, bool isIncluded, CancellationToken cancellationToken)
         {
             var posts = await _dbSet
                 .AsNoTracking()
                 .OrderByDescending(x => x.CreatedAt)
-                .Where(x => x.User.UserName == username)
-                .Include(x => x.comments!)
-                .ThenInclude(c => c.User!)
+                .Where(x => x.UserId == userId)
+                .CustomInclude(x => x.User!, isIncluded)
                 .ToListAsync(cancellationToken);
 
             return posts;

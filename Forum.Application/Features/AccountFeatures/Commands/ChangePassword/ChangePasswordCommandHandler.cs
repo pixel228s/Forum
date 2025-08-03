@@ -1,12 +1,12 @@
-﻿using Forum.Application.Exceptions;
-using Forum.Application.Features.AccountFeatures.Commands.ChangePassword.Models;
+﻿using Forum.Application.Common.Dtos.Auth.Responses;
+using Forum.Application.Exceptions;
 using Forum.Domain.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace Forum.Application.Features.AccountFeatures.Commands.ChangePassword
 {
-    public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, Response>
+    public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, ChangePasswordResponse>
     {
         private readonly UserManager<User> _userManager;
 
@@ -15,7 +15,7 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ChangePassword
             _userManager = userManager;
         }
 
-        public async Task<Response> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+        public async Task<ChangePasswordResponse> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
             var user = await _userManager.FindByEmailAsync(request.Email).ConfigureAwait(false);
             if (user == null)
@@ -37,7 +37,7 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ChangePassword
             if (result.Succeeded)
             {
                 result.Succeeded.ToString();
-                return new Response();
+                return new ChangePasswordResponse();
             }
             string message = string.Join("; ", result.Errors.Select(e => e.Description));
             throw new AuthenticationException(message);

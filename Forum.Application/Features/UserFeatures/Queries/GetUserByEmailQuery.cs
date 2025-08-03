@@ -1,4 +1,4 @@
-﻿using Forum.Application.Features.UserFeatures.Queries.Models;
+﻿using Forum.Application.Common.Dtos.Users.Responses;
 using MediatR;
 
 namespace Forum.Application.Features.UserFeatures.Queries

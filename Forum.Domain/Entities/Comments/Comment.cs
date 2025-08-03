@@ -2,11 +2,11 @@
 using Forum.Domain.Models.Posts;
 using Forum.Domain.Models.Users;
 
-namespace Forum.Domain.Models
+namespace Forum.Domain.Entities.Comments
 {
     public class Comment : BaseEntity
     {
-        public int UserId { get; set; } 
+        public int UserId { get; set; }
         public int PostId { get; set; }
         public required string Text { get; set; }
 

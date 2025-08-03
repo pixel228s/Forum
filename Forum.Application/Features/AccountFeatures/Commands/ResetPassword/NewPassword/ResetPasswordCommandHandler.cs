@@ -16,13 +16,16 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ResetPassword.NewP
 
         public async Task<Unit> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email);
+            var user = await _userManager.FindByEmailAsync(request.Email)
+                .ConfigureAwait(false);
             if (user == null)
             {
                 return Unit.Value;
             }
 
-            var result = await _userManager.ResetPasswordAsync(user, request.ResetToken, request.Password);
+            var result = await _userManager
+                .ResetPasswordAsync(user, request.ResetToken, request.Password)
+                .ConfigureAwait(false);
 
             if (!result.Succeeded)
             {

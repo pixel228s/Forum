@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using Forum.Application.Common.Dtos.Posts.Requests;
+using Forum.Application.Features.PostFeatures.Commands.ChangeState;
 using Forum.Application.Features.PostFeatures.Commands.CreatePost;
 using Forum.Application.Features.PostFeatures.Commands.DeletePost;
 using Forum.Application.Features.PostFeatures.Commands.UpdatePost;
+using Forum.Application.Features.PostFeatures.Queries.RetrievePost;
+using Forum.Application.Features.PostFeatures.Queries.RetrievePostComments;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Forum.Api.Controllers.v1
 {
@@ -39,13 +43,40 @@ namespace Forum.Api.Controllers.v1
             return Ok(result);
         }
 
+        [SwaggerResponse(204, "Post deleted successfully")]
         [HttpPut("delete-post/{postId}")]
         public async Task<IActionResult> DeletePost(int postId, CancellationToken cancellationToken)
         {
             var command = new DeletePostCommand { PostId = postId };
-            var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
+            await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
+            return NoContent();
+        }
+
+        [HttpGet("{postId}")]
+        public async Task<IActionResult> GetPostById(int postId, CancellationToken cancellationToken)
+        {
+            var query = new GetPostByIdQuery { PostId = postId };
+            var result = await _mediator.Send(query, cancellationToken)
+                .ConfigureAwait(false);
             return Ok(result);
         }
 
+        [HttpGet("{postId}/comments")]
+        public async Task<IActionResult> GetCommentsByPostId(int postId, CancellationToken cancellationToken)
+        {
+            var query = new GetPostCommentsByIdQuery { PostId = postId };
+            var result = await _mediator.Send(query, cancellationToken)
+                .ConfigureAwait(false);
+            return Ok(result);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{postId}/change-state")]
+        public async Task<IActionResult> ChangePostState(int postId, bool IsAccepted, CancellationToken cancellationToken)
+        {
+            var command = new ChangeStateCommand { PostId = postId, IsAccepted = IsAccepted };
+            await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
+            return Ok(); 
+        }
     }
 }

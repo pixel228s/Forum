@@ -25,7 +25,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.UpdatePost
 
         public async Task<PostResponse> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
         {
-            var post = await _postRepository.GetPostByIdAsync(request.Id, cancellationToken, false);
+            var post = await _postRepository.GetPostByIdAsync(request.Id, cancellationToken, false, false);
 
             if (post == null)
             {

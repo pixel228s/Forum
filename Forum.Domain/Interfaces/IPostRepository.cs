@@ -6,9 +6,8 @@ namespace Forum.Domain.Interfaces
     public interface IPostRepository : IBaseRepository<Post>
     {
         Task<IEnumerable<PostWithCommentCount>> GetAllPosts(CancellationToken cancellationToken);
-        Task<Post?> GetPostByIdAsync(int id, CancellationToken cancellationToken, bool isIncluded);
-        Task<IEnumerable<Post>> GetPostsWithCommentsByUser(string username, CancellationToken cancellationToken);
-        Task<int> GetPostCountByUserAsync(int userId, CancellationToken cancellationToken);
+        Task<Post?> GetPostByIdAsync(int id, CancellationToken cancellationToken, bool isIncluded, bool isAllowed);
+        Task<IEnumerable<Post>> GetPostsByUserId(int userId, bool isIncluded, CancellationToken cancellationToken);
         Task<IEnumerable<Post>> GetHiddenTopics(CancellationToken cancellationToken);
     }
 }

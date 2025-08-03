@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Forum.Application.Features.AccountFeatures.Queries.Login.Models
+namespace Forum.Application.Common.Dtos.Auth.Responses
 {
     public class TokenDto
     {

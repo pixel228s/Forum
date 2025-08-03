@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Forum.Application.Features.UserFeatures.Queries.Models
+namespace Forum.Application.Common.Dtos.Users.Responses
 {
     public class UserResponse
     {

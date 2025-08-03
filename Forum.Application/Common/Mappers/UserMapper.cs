@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Forum.Application.Common.Dtos.Users.Responses;
 using Forum.Application.Features.AccountFeatures.Commands.Registration;
-using Forum.Application.Features.UserFeatures.Queries.Models;
 using Forum.Domain.Models.Users;
 
 namespace Forum.Application.Common.Mappers
