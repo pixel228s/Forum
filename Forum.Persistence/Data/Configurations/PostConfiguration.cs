@@ -19,10 +19,20 @@ namespace Forum.Persistence.Data.Configurations
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
 
+            builder.Property(x => x.Content)
+                .HasColumnType("nvarchar(4000)")
+                .IsUnicode(true);
+
+            builder.Property(x => x.Title)
+                .HasColumnType("nvarchar(300)")
+                .IsUnicode(true);
+
             builder.HasOne(x => x.User)
                 .WithMany(p => p.Posts)
                 .HasForeignKey(x => x.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasQueryFilter(x => x.State == State.Show && !x.IsDeleted);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Forum.Domain.Models.Users
         public bool IsBanned { get; set; }
 
         public Ban? BanInfo {  get; set; } 
-        public ICollection<Post>? Posts { get; } = new List<Post>();
-        public ICollection<Comment>? Comments { get; } = new List<Comment>();
+        public IQueryable<Post>? Posts { get; } 
+        public IQueryable<Comment>? Comments { get; }
     }
 }

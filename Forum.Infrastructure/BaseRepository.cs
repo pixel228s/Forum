@@ -1,9 +1,11 @@
-﻿using Forum.Persistence.Data;
+﻿using Forum.Domain.Interfaces;
+using Forum.Domain.Models.Base;
+using Forum.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Infrastructure
 {
-    public class BaseRepository<T> where T : class
+    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         protected readonly ForumDbContext _dbContext;
         protected readonly DbSet<T> _dbSet;
@@ -14,32 +16,39 @@ namespace Forum.Infrastructure
             _dbSet = _dbContext.Set<T>();
         }
 
-        public async Task<List<T>?> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<T?> GetAsync(CancellationToken cancellationToken, params object[] key)
         {
-            return await _dbSet.ToListAsync(cancellationToken);
+            return await _dbSet.FindAsync(key, cancellationToken);
         }
 
-        public async Task<T?> GetAsync(object param, CancellationToken cancellationToken)
-        {
-            return await _dbSet.FindAsync(param, cancellationToken);
-        }
-
-        public async Task CreateAsync(CancellationToken cancellationToken, T entity)
+        public async Task AddAsync(T entity, CancellationToken cancellationToken)
         {
             await _dbSet.AddAsync(entity, cancellationToken);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeactivateEntity(T Entity, CancellationToken cancellationToken)
+        {
+            Entity.IsDeleted = true;
+
+            _dbContext.Update(Entity);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task DeleteAsync(CancellationToken cancellationToken, T entity)
+        public async Task RemoveAsync(T entity, CancellationToken cancellationToken)
         {
+            if (entity == null)
+            {
+                return;
+            }
+
             _dbSet.Remove(entity);
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(CancellationToken cancellationToken, T entity)
+        public async Task UpdateEntity(T entity, CancellationToken cancellationToken)
         {
             _dbSet.Update(entity);
-
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }

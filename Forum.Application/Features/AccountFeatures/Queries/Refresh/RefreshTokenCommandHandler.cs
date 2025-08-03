@@ -22,7 +22,7 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Refresh
         public async Task<TokenDto> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
         {
             var principal = _tokenProvider.GetClaimsPrincipal(request.AccessToken);
-            var user = await _userManager.FindByNameAsync(principal.Identity.Name);
+            var user = await _userManager.FindByNameAsync(principal.Identity!.Name!);
 
             if (user == null
                 || user.RefreshToken != request.RefreshToken

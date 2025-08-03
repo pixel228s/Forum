@@ -8,9 +8,11 @@ namespace Forum.Domain.Models.Posts
     {
         public State State { get; set; } = State.Pending;
         public int UserId { get; set; }
-        public string? picUrl { get; set; }
+        public string? ImageUrl { get; set; }
+        public string Content { get; set; }
+        public string? Title { get; set; }
 
-        public virtual User User { get; set; }
-        public virtual ICollection<Comment>? comments { get; set; }
+        public User User { get; set; }
+        public IQueryable<Comment>? comments { get; set; }
     }
 }

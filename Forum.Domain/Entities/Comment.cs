@@ -10,7 +10,7 @@ namespace Forum.Domain.Models
         public int PostId { get; set; }
         public required string Text { get; set; }
 
-        public virtual User User { get; set; }
-        public virtual Post Post { get; set; }
+        public User User { get; set; }
+        public Post Post { get; set; }
     }
 }

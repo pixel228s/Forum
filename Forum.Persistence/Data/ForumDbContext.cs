@@ -1,4 +1,6 @@
-﻿using Forum.Domain.Models.Base;
+﻿using Forum.Domain.Models;
+using Forum.Domain.Models.Base;
+using Forum.Domain.Models.Posts;
 using Forum.Domain.Models.Users;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -13,6 +15,8 @@ namespace Forum.Persistence.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Comment> Comments { get; set; }    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,7 +42,7 @@ namespace Forum.Persistence.Data
 
             foreach (var entity in entities)
             {
-                if (entity.State == EntityState.Modified)
+                if (entity.State == EntityState.Added)
                 {
                     entity.Entity.CreatedAt = DateTime.UtcNow;
                 }

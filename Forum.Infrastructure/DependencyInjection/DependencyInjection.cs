@@ -9,6 +9,7 @@ namespace Forum.Infrastructure.DependencyInjection
         public static IServiceCollection addServices(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
 
             return services;
         }
