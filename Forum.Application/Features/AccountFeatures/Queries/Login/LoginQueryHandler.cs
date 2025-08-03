@@ -38,7 +38,7 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
                     var tokenDto = await _tokenProvider.CreateToken(user, roles);
 
                     user.RefreshToken = tokenDto.RefreshToken;
-                    user.RefreshTokenExpiryTime  = DateTime.UtcNow;
+                    user.RefreshTokenExpiryTime  = DateTime.UtcNow.AddDays(7);
                     await _userManager.UpdateAsync(user);
                     return tokenDto;
                 }

@@ -11,6 +11,8 @@ namespace Forum.Application.Features.PostFeatures.Commands.CreatePost
                 .WithMessage("Maximum length of title exceeded");
 
             RuleFor(x => x.post)
+                .NotEmpty()
+                .WithMessage("post content can not be empty")
                 .MaximumLength(4000)
                 .WithMessage("Maximum length of content exceeded");
         }

@@ -61,17 +61,19 @@ namespace Forum.Application.Common.SecurityService
 
         public ClaimsPrincipal GetClaimsPrincipal(string token)
         {
-            var jwtSetting = _configuration.GetSection("Authentication");
+            var issuer = _configuration["Authentication:Issuer"];
+            var audience = _configuration["Authentication:Audience"];
+            var secret = _configuration["Authentication:SecretForKey"];
+
             var tokenValidationParameters = new TokenValidationParameters
             {
-
-                ValidateIssuer = true,
+                ValidateLifetime = false,
+                ValidateIssuer = false,
                 ValidateAudience = true,
                 ValidateIssuerSigningKey = true,
-                ValidateLifetime = true,
-                ValidIssuer = _configuration["Issuer"],
-                ValidAudience = _configuration["Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecretForKey"]))
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!))
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -79,7 +81,7 @@ namespace Forum.Application.Common.SecurityService
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
             var jwtSecurityToken = securityToken as JwtSecurityToken;
 
-            if (jwtSecurityToken != null || !jwtSecurityToken!.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            if (jwtSecurityToken == null || !jwtSecurityToken!.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new SecurityTokenException("invalid token");
             }

@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace Forum.Domain.Interfaces
+﻿namespace Forum.Domain.Interfaces
 {
     public interface IBaseRepository<T>
     {
@@ -8,5 +6,6 @@ namespace Forum.Domain.Interfaces
         Task AddAsync(T entity, CancellationToken cancellationToken);
         Task RemoveAsync(T entity, CancellationToken cancellationToken);
         Task UpdateEntity(T entity, CancellationToken cancellationToken);
+        Task DeactivateEntity(T entity, CancellationToken cancellationToken);
     }
 }

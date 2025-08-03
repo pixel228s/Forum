@@ -31,9 +31,9 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command, CancellationToken cancellationToken)
         {
-            var result = _mediator.Send(command).ConfigureAwait(false);
+            var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(result);
         }
 

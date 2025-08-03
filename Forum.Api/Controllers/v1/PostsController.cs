@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Forum.Application.Common.Dtos.Posts.Requests;
 using Forum.Application.Features.PostFeatures.Commands.CreatePost;
+using Forum.Application.Features.PostFeatures.Commands.DeletePost;
 using Forum.Application.Features.PostFeatures.Commands.UpdatePost;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -25,16 +26,24 @@ namespace Forum.Api.Controllers.v1
         [HttpPost("create-post")]
         public async Task<IActionResult> CreatePost([FromBody] CreatePostCommand command, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(result);
         }
 
-        [HttpPost("update-post")]
+        [HttpPut("update-post/{postId}")]
         public async Task<IActionResult> CreatePost(int postId, [FromBody] UpdatePostRequest request, CancellationToken cancellationToken)
         {
             var command = _mapper.Map<UpdatePostCommand>(request);
             command.Id = postId;
-            var result = await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
+            return Ok(result);
+        }
+
+        [HttpPut("delete-post/{postId}")]
+        public async Task<IActionResult> DeletePost(int postId, CancellationToken cancellationToken)
+        {
+            var command = new DeletePostCommand { PostId = postId };
+            var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(result);
         }
 
