@@ -4,7 +4,7 @@ using Forum.Application.Exceptions;
 using Forum.Domain.Interfaces;
 using MediatR;
 
-namespace Forum.Application.Features.UserFeatures.Queries
+namespace Forum.Application.Features.UserFeatures.Queries.RetrieveUserById
 {
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserResponse>
     {

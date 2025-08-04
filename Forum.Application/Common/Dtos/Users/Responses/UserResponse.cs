@@ -7,6 +7,6 @@ namespace Forum.Application.Common.Dtos.Users.Responses
         [JsonPropertyName("user_id")]
         public int Id { get; set; }
         [JsonPropertyName("username")]
-        public string Username { get; set; }
+        public string UserName { get; set; }
     }
 }

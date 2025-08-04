@@ -5,5 +5,6 @@ namespace Forum.Domain.Interfaces
     public interface ICommentRepository
     {
         Task<IQueryable<CommentWithUserInfo>> GetCommentsByPostId(int postID, bool include, CancellationToken cancellationToken);
+        Task<IEnumerable<Comment>> GetCommentsByUserId(int userId, CancellationToken cancellationToken); 
     }
 }

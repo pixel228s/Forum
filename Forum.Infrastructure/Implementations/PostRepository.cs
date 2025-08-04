@@ -56,13 +56,12 @@ namespace Forum.Infrastructure.Implementations
             return post;
         }
 
-        public async Task<IEnumerable<Post>> GetPostsByUserId(int userId, bool isIncluded, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Post>> GetPostsByUserId(int userId, CancellationToken cancellationToken)
         {
             var posts = await _dbSet
                 .AsNoTracking()
                 .OrderByDescending(x => x.CreatedAt)
                 .Where(x => x.UserId == userId)
-                .CustomInclude(x => x.User!, isIncluded)
                 .ToListAsync(cancellationToken);
 
             return posts;

@@ -7,7 +7,7 @@ namespace Forum.Domain.Interfaces
     {
         Task<IEnumerable<PostWithCommentCount>> GetAllPosts(CancellationToken cancellationToken);
         Task<Post?> GetPostByIdAsync(int id, CancellationToken cancellationToken, bool isIncluded, bool isAllowed);
-        Task<IEnumerable<Post>> GetPostsByUserId(int userId, bool isIncluded, CancellationToken cancellationToken);
+        Task<IEnumerable<Post>> GetPostsByUserId(int userId, CancellationToken cancellationToken);
         Task<IEnumerable<Post>> GetHiddenTopics(CancellationToken cancellationToken);
     }
 }

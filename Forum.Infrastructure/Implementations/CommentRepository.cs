@@ -28,5 +28,15 @@ namespace Forum.Infrastructure.Implementations
 
             return Task.FromResult(comments);
         }
+
+        public async Task<IEnumerable<Comment>> GetCommentsByUserId(int userId, CancellationToken cancellationToken)
+        {
+            var comments = await _dbSet
+                .AsNoTracking()
+                .Where(x => x.UserId == userId)
+                .ToListAsync(cancellationToken);
+
+            return comments;
+        }
     }
 }
