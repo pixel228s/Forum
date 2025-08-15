@@ -22,7 +22,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.CreatePost
         public async Task<PostResponse> Handle(CreatePostCommand request, CancellationToken cancellationToken)
         {
             var post = _mapper.Map<Post>(request);
-            post.UserId = int.Parse(request.userId);
+            post.UserId = request.userId;
 
             await _postRepository.AddAsync(post, cancellationToken);
 

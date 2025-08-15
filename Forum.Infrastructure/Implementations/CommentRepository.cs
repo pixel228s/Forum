@@ -12,6 +12,16 @@ namespace Forum.Infrastructure.Implementations
         {
         }
 
+        public Task<Comment?> GetCommentById(int id, bool isIncluded, CancellationToken cancellationToken)
+        {
+            var comment = _dbSet
+                .AsNoTracking()
+                .Where(x => x.Id == id)
+                .CustomInclude(c => c.User, isIncluded)
+                .FirstOrDefaultAsync();
+            return comment;
+        }
+
         public Task<IQueryable<CommentWithUserInfo>> GetCommentsByPostId(int postID, bool include, CancellationToken cancellationToken)
         {
             var comments = _dbSet

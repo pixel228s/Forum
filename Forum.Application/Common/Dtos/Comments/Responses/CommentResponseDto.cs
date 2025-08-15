@@ -15,6 +15,6 @@ namespace Forum.Application.Common.Dtos.Comments.Responses
         [JsonPropertyName("post-id")]
         public int PostId { get; set; }
         [JsonPropertyName("creation-date")]
-        public int CreationDate { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

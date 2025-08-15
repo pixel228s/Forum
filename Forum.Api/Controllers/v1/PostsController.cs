@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Forum.Application.Common.Behaviors;
 using Forum.Application.Common.Dtos.Posts.Requests;
 using Forum.Application.Features.PostFeatures.Commands.ChangeState;
 using Forum.Application.Features.PostFeatures.Commands.CreatePost;
@@ -39,8 +40,8 @@ namespace Forum.Api.Controllers.v1
         public async Task<IActionResult> CreatePost([FromBody] CreatePostRequest request, CancellationToken cancellationToken)
         {
             var command = _mapper.Map<CreatePostCommand>(request);
-            command.userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-            
+            command.userId = User.GetUserId();
+
             var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(result);
         }
@@ -50,7 +51,7 @@ namespace Forum.Api.Controllers.v1
         {
             var command = _mapper.Map<UpdatePostCommand>(request);
             command.Id = postId;
-            command.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            command.UserId = User.GetUserId();
 
             var result = await _mediator.Send(command, cancellationToken)
                 .ConfigureAwait(false);

@@ -28,7 +28,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.UpdatePost
                 throw new ObjectNotFoundException();
             }
 
-            if (post.UserId != int.Parse(request.UserId!))
+            if (post.UserId != request.UserId!)
             {
                 throw new ActionForbiddenException();
             }

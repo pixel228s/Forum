@@ -1,10 +1,11 @@
-﻿using FluentValidation;
+﻿
+using FluentValidation;
 
-namespace Forum.Application.Features.CommentFeatures.Commands.CreateComment
+namespace Forum.Application.Features.CommentFeatures.Commands.UpdateComment
 {
-    public class CreateCommentCommandValidator : AbstractValidator<CreateCommentCommand>
+    public class UpdateCommentCommandValidator : AbstractValidator<UpdateCommentCommand>
     {
-        public CreateCommentCommandValidator() 
+        public UpdateCommentCommandValidator() 
         {
             RuleFor(x => x.Content)
                 .NotEmpty()
