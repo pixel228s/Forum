@@ -10,9 +10,9 @@
     <Folder Include="Features\AdminFeatures\Commands\NewFolder\" />
     <Folder Include="Features\AdminFeatures\Commands\UnbanUser\" />
     <Folder Include="Features\AdminFeatures\Queries\" />
-    <Folder Include="Features\PostFeatures\Queries\GetAllPosts\" />
-    <Folder Include="Features\PostFeatures\Queries\RetrievePendingPosts\" />
-    <Folder Include="Features\UserFeatures\Commands\DeleteUser\" />
+    <Folder Include="Features\CommentFeatures\Commands\DeleteComment\" />
+    <Folder Include="Features\CommentFeatures\Commands\UpdateComment\" />
+    <Folder Include="Features\CommentFeatures\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,7 +10,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.CreatePost
                 .MaximumLength(300)
                 .WithMessage("Maximum length of title exceeded");
 
-            RuleFor(x => x.post)
+            RuleFor(x => x.Content)
                 .NotEmpty()
                 .WithMessage("post content can not be empty")
                 .MaximumLength(4000)

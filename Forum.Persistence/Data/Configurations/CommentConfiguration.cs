@@ -22,7 +22,7 @@ namespace Forum.Persistence.Data.Configurations
             builder.HasOne(u => u.User)
                 .WithMany(c => c.Comments)
                 .HasForeignKey(u => u.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(p => p.Post)
                 .WithMany(c => c.comments)

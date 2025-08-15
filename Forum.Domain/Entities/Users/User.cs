@@ -11,6 +11,7 @@ namespace Forum.Domain.Models.Users
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
         public string? picUrl { get; set; }
+        public bool IsAdmin { get; set; } = false!;
         public bool IsBanned { get; set; }
 
         public Ban? BanInfo {  get; set; } 

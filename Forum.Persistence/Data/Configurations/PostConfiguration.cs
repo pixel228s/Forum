@@ -30,7 +30,7 @@ namespace Forum.Persistence.Data.Configurations
             builder.HasOne(x => x.User)
                 .WithMany(p => p.Posts)
                 .HasForeignKey(x => x.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasQueryFilter(x => x.State == State.Show && !x.IsDeleted);
         }

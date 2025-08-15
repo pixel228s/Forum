@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Forum.Application.Common.Dtos.Users;
 using Forum.Application.Common.Dtos.Users.Requests;
+using Forum.Application.Features.UserFeatures.Commands.DeleteUser;
 using Forum.Application.Features.UserFeatures.Commands.UpdateUser;
 using Forum.Application.Features.UserFeatures.Queries.GetUserPosts;
 using Forum.Application.Features.UserFeatures.Queries.RetrieveUserByEmail;
@@ -31,8 +31,6 @@ namespace Forum.Api.Controllers.v1
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
-
-
 
         [HttpGet("user/{id}")]
         [SwaggerResponse(200, "User found successfully")]
@@ -66,7 +64,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(posts);
         }
 
-        [HttpGet("{id}/comments")]
+        [HttpGet("/{id}/comments")]
         [SwaggerResponse(200, "Comments retrieved")]
         [SwaggerResponse(401, "Action not authorized")]
         public async Task<IActionResult> GetUserComments(int id, CancellationToken cancellationToken)
@@ -80,9 +78,20 @@ namespace Forum.Api.Controllers.v1
         public async Task<IActionResult> UpdateUser(UserUpdateRequest request, CancellationToken cancellationToken)
         {
             var command = _mapper.Map<UpdateUserCommand>(request);
-            command.Id = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+            command.Id = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
             var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(result);
+        }
+
+        [HttpDelete("/id/{userId}/delete")]
+        public async Task<IActionResult> DeleteUser(string userId, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new DeleteUserCommand
+            {
+                UserId = userId,
+                RequesterId = User.FindFirstValue(ClaimTypes.NameIdentifier)!
+            });
+            return NoContent();
         }
     }
 }

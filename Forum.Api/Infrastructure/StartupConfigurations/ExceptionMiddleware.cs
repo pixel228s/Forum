@@ -86,7 +86,7 @@ namespace Forum.Api.Infrastructure.StartupConfigurations
         private static Task GetHttpResponse(ProblemDetails problemDetails, HttpContext httpContext)
         {
             httpContext.Response.ContentType = "application/problem+json";
-            httpContext.Response.StatusCode = problemDetails.Status.Value;
+            httpContext.Response.StatusCode = problemDetails.Status!.Value;
             var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             var result = JsonSerializer.Serialize(problemDetails, options);
             return httpContext.Response.WriteAsync(result);

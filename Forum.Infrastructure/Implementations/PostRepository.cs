@@ -32,13 +32,13 @@ namespace Forum.Infrastructure.Implementations
             return posts;
         }
 
-        public async Task<IEnumerable<Post>> GetHiddenTopics(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Post>> GetPendingPosts(CancellationToken cancellationToken)
         {
             var hiddenPosts = await 
                 _dbSet
                 .AsNoTracking()
                 .IgnoreQueryFilters()
-                .Where(x => x.State == State.Hide)
+                .Where(x => x.State == State.Pending)
                 .ToListAsync(cancellationToken);
 
             return hiddenPosts;

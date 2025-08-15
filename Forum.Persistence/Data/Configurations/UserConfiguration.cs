@@ -16,6 +16,8 @@ namespace Forum.Persistence.Data.Configurations
 
             builder.Property(x => x.RefreshToken).HasMaxLength(50);
 
+            builder.Property(x => x.IsAdmin).HasDefaultValue(false);
+
             builder.Property(x => x.Email)
                 .IsRequired()
                 .HasMaxLength(120)
