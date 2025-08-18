@@ -12,6 +12,10 @@ namespace Forum.Persistence.Data.Configurations
 
             builder.HasKey(x => x.Id);
 
+            builder.Property(x => x.BanReason)
+                .HasMaxLength(500)
+                .HasColumnName("nvarchar");
+
             builder.HasOne(u => u.User)
                 .WithOne(b => b.BanInfo)
                 .HasForeignKey<Ban>(b => b.UserId);

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Forum.Api.Controllers.v1
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/posts/comments")]
     [Authorize]
     [ApiController]
     public class CommentsController : ControllerBase
@@ -36,7 +36,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(result);
         }
 
-        [HttpPost("/create-comment")]
+        [HttpPost("create-comment")]
         public async Task<IActionResult> CreateComment(CreateCommentRequest request, CancellationToken cancellationToken)
         {
             var command = _mapper.Map<CreateCommentCommand>(request);
@@ -45,7 +45,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(result);
         }
 
-        [HttpPatch("/{commentId}/update-comment")]
+        [HttpPatch("{commentId}")]
         public async Task<IActionResult> CreateComment(int commentId, UpdateCommentRequest request, CancellationToken cancellationToken)
         {
             var command = _mapper.Map<UpdateCommentCommand>(request);
@@ -57,7 +57,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(result);
         }
 
-        [HttpDelete("/{commentId}/delete-comment")]
+        [HttpDelete("{commentId}")]
         public async Task<IActionResult> DeleteComment(int commentId, CancellationToken cancellationToken)
         {
             var comment = new DeleteCommentCommand

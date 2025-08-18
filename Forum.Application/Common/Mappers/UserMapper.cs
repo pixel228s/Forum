@@ -17,7 +17,6 @@ namespace Forum.Application.Common.Mappers
             CreateMap<RegisterUserCommand, User>();
 
             CreateMap<UserUpdateRequest, UpdateUserCommand>();
-         
         }
     }
 }

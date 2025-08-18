@@ -1,38 +1,36 @@
 using Forum.Api.Extensions;
 using Forum.Api.Infrastructure.StartupConfigurations;
 using Forum.Application.DependencyInjection;
-using Forum.Domain.Models.Users;
 using Forum.Infrastructure.DependencyInjection;
 using Forum.Persistence;
-using Forum.Persistence.Data;
-using Microsoft.AspNetCore.Identity;
+using Forum.Persistence.Seed;
 
 
 namespace Forum.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
             
             builder.Services
+                .AddEndpointsApiExplorer()
+                .AddSwaggerGen()
                 .AddVersioning()
                 .AddSwaggerConfigurations()
+                .AddHealthCheckService()
                 .AddIdentity()
                 .AddMailSender(builder.Configuration)
                 .AddJwtConfiguration(builder.Configuration)
                 .AddPersistence(builder.Configuration)
                 .AddTokenProvider()
                 .AddCustomValidation()
-                .addServices()
+                .addServices(builder.Configuration)
                 .addAutoMapper()
                 .addMediator();
 
@@ -51,6 +49,8 @@ namespace Forum.Api
             app.UseAuthorization();
            
             app.MapControllers();
+
+            await app.Services.SeedAdmin();
 
             app.Run();
         }

@@ -1,4 +1,6 @@
-﻿using Forum.Persistence.Data;
+﻿using Forum.Domain.Interfaces;
+using Forum.Persistence.Data;
+using Forum.Persistence.HealthCheck;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +15,12 @@ namespace Forum.Persistence
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly(typeof(ForumDbContext).Assembly.FullName)));
+            return services;
+        }
+
+        public static IServiceCollection AddHealthCheckService(this IServiceCollection services)
+        {
+            services.AddScoped<IHealthCheckService, HealthCheckService>();
             return services;
         }
     }

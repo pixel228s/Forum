@@ -15,7 +15,7 @@ namespace Forum.Api.Controllers.v1
 {
     [Authorize]
     [ApiController]
-    [Route("api/v{version:apiVersion}/[controller]")]
+    [Route("api/v{version:apiVersion}/users")]
     //[ApiVersion("1.0")]
     public class UserController : ControllerBase
     {
@@ -32,7 +32,7 @@ namespace Forum.Api.Controllers.v1
             _mapper = mapper;
         }
 
-        [HttpGet("user/{id}")]
+        [HttpGet("{id}")]
         [SwaggerResponse(200, "User found successfully")]
         [SwaggerResponse(404, "User not found")]
         [SwaggerResponse(401, "Action not authorized")]
@@ -64,7 +64,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(posts);
         }
 
-        [HttpGet("/{id}/comments")]
+        [HttpGet("{id}/comments")]
         [SwaggerResponse(200, "Comments retrieved")]
         [SwaggerResponse(401, "Action not authorized")]
         public async Task<IActionResult> GetUserComments(int id, CancellationToken cancellationToken)
@@ -83,7 +83,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(result);
         }
 
-        [HttpDelete("/id/{userId}/delete")]
+        [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUser(string userId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new DeleteUserCommand

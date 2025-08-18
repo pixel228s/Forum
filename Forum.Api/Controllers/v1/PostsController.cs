@@ -13,11 +13,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Security.Claims;
 
 namespace Forum.Api.Controllers.v1
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/users/posts")]
     [Authorize]
     [ApiController]
     public class PostsController : ControllerBase
@@ -46,7 +45,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(result);
         }
 
-        [HttpPut("update-post/{postId}")]
+        [HttpPut("{postId}")]
         public async Task<IActionResult> UpdatePost(int postId, [FromBody] UpdatePostRequest request, CancellationToken cancellationToken)
         {
             var command = _mapper.Map<UpdatePostCommand>(request);
@@ -59,7 +58,7 @@ namespace Forum.Api.Controllers.v1
         }
 
         [SwaggerResponse(204, "Post deleted successfully")]
-        [HttpPut("delete-post/{postId}")]
+        [HttpDelete("{postId}")]
         public async Task<IActionResult> DeletePost(int postId, CancellationToken cancellationToken)
         {
             var command = new DeletePostCommand { PostId = postId };
@@ -88,7 +87,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("/posts")]
+        [HttpGet("posts")]
         public async Task<IActionResult> GetAllPosts(CancellationToken cancellationToken)
         {
             var posts = await _mediator.Send(new GetAllPostsQuery(), 
@@ -111,7 +110,7 @@ namespace Forum.Api.Controllers.v1
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpGet("/pending-posts")]
+        [HttpGet("pending-posts")]
         public async Task<IActionResult> GetPendingPosts(CancellationToken cancellationToken)
         {
             var list = await _mediator.Send(new GetPendingPostsQuery(), cancellationToken)

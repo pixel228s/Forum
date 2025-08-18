@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\AdminFeatures\Commands\NewFolder\" />
+    <Folder Include="Common\Dtos\Auth\Requests\" />
+    <Folder Include="Features\AdminFeatures\Commands\RevokeBan\" />
     <Folder Include="Features\AdminFeatures\Commands\UnbanUser\" />
-    <Folder Include="Features\AdminFeatures\Queries\" />
+    <Folder Include="Features\AdminFeatures\Queries\GetBanByUserId\" />
+    <Folder Include="Features\AdminFeatures\Queries\GetBanById\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Forum.Domain\Forum.Domain.csproj" />
+	<ProjectReference Include="..\Forum.Infrastructure\Forum.Infrastructure.csproj" />
   </ItemGroup>
 
 

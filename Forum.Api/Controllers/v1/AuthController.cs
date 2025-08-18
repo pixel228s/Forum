@@ -1,4 +1,5 @@
-﻿using Forum.Application.Features.AccountFeatures.Commands.ChangePassword;
+﻿using AutoMapper;
+using Forum.Application.Features.AccountFeatures.Commands.ChangePassword;
 using Forum.Application.Features.AccountFeatures.Commands.Registration;
 using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.NewPassword;
 using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.SendOtp;
@@ -13,14 +14,17 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Forum.Api.Controllers.v1
 {
     [ApiController]
-    [Route("api/v{apiVersion:apiVersion}/[controller]")]
+    [Route("api/v{apiVersion:apiVersion}/auth")]
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public AuthController(IMediator mediator)
+        public AuthController(IMediator mediator,
+            IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         [HttpPost("login-user")]
@@ -39,7 +43,7 @@ namespace Forum.Api.Controllers.v1
 
         [HttpPost("register")]
         [SwaggerResponse(200, "User created successfully")]
-        public async Task<IActionResult> RegisterUser([FromBody] RegisterUserCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> RegisterUser(RegisterUserCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(result);

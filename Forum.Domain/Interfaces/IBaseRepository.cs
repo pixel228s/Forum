@@ -7,5 +7,6 @@
         Task RemoveAsync(T entity, CancellationToken cancellationToken);
         Task UpdateEntity(T entity, CancellationToken cancellationToken);
         Task DeactivateEntity(T entity, CancellationToken cancellationToken);
+
     }
 }

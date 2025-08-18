@@ -36,7 +36,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.DeletePost
                 throw new ActionForbiddenException();
             }
 
-            await _postRepository.DeactivateEntity(post, cancellationToken);
+            await _postRepository.RemoveAsync(post, cancellationToken);
 
             return Unit.Value;
         }
