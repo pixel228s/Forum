@@ -9,13 +9,11 @@ namespace Forum.Application.Features.PostFeatures.Commands.DeletePost
     public class DeletePostCommandHandler : IRequestHandler<DeletePostCommand, Unit>
     {
         private readonly IPostRepository _postRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public DeletePostCommandHandler(IPostRepository postRepository, 
             IHttpContextAccessor httpContextAccessor) 
         { 
             _postRepository = postRepository;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<Unit> Handle(DeletePostCommand request, CancellationToken cancellationToken)
@@ -26,12 +24,8 @@ namespace Forum.Application.Features.PostFeatures.Commands.DeletePost
             {
                 throw new ObjectNotFoundException();
             }
-
-            var userId = _httpContextAccessor
-                .HttpContext.User
-                .FindFirst(ClaimTypes.NameIdentifier)!.Value;
-
-            if (post.UserId != int.Parse(userId))
+   
+            if (post.UserId != request.UserId)
             {
                 throw new ActionForbiddenException();
             }

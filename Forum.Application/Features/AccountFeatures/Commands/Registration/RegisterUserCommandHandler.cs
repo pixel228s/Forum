@@ -14,7 +14,6 @@ namespace Forum.Application.Features.AccountFeatures.Commands.Registration
     {
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        private readonly IS3Service _s3Service;
         private readonly IConfiguration _config;
 
         public RegisterUserCommandHandler(
@@ -25,28 +24,12 @@ namespace Forum.Application.Features.AccountFeatures.Commands.Registration
         {
             _userManager = userManager;
             _mapper = mapper;
-            _s3Service = s3Service; 
             _config = config;
         }
 
         public async Task<IdentityResult> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
             var user = _mapper.Map<User>(request);
-
-            if (request.Image != null)
-            {
-                string bucket = _config["AWS:BucketName"]!;
-                var uploadRequest = FileUploadRequest
-                    .CreateImage(request.Folder, request.Image);
-                string? urlToStore = await _s3Service.UploadFile(uploadRequest, bucket, cancellationToken);
-
-                if (urlToStore == null)
-                {
-                    throw new AppException("Failed to upload picture");
-                }
-
-                user.picUrl = urlToStore;
-            }
 
             var result = await _userManager
                 .CreateAsync(user, request.Password)

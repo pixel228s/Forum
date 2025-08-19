@@ -24,6 +24,11 @@ namespace Forum.Infrastructure.Services.S3.Models.Requests
 
         public static FileUploadRequest CreateImage(string folder, IFormFile file)
         {
+            string extension = Path.GetExtension(file.FileName);
+            if (!(new string[] { ".webp", ".ico", ".jpg", ".png", ".jpeg" }).Contains(extension))
+            {
+                throw new Exception("Invalid image format");
+            }
             return CreateImage(folder, file.GetBytes()!, Path.GetExtension(file.FileName));
         }
     }

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Forum.Application.Common.Dtos.Users.Requests;
+using Forum.Application.Features.UserFeatures.Commands.DeleteImage;
 using Forum.Application.Features.UserFeatures.Commands.DeleteUser;
 using Forum.Application.Features.UserFeatures.Commands.UpdateUser;
+using Forum.Application.Features.UserFeatures.Commands.UploadProfilePicture;
 using Forum.Application.Features.UserFeatures.Queries.GetUserPosts;
 using Forum.Application.Features.UserFeatures.Queries.RetrieveUserByEmail;
 using Forum.Application.Features.UserFeatures.Queries.RetrieveUserById;
@@ -90,8 +92,31 @@ namespace Forum.Api.Controllers.v1
             {
                 UserId = userId,
                 RequesterId = User.FindFirstValue(ClaimTypes.NameIdentifier)!
-            });
+            }).ConfigureAwait(false);
             return NoContent();
+        }
+
+        [HttpPatch("upload")]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile file, CancellationToken cancellationToken)
+        {
+            var command = new UploadImageCommand
+            {
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!,
+                Image = file
+            };
+            await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
+            return Ok();
+        }
+
+        [HttpPatch("delete-image")]
+        public async Task<IActionResult> DeleteProfilePicture(CancellationToken cancellationToken)
+        {
+            var command = new DeleteImageCommand
+            {
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!,
+            };
+            await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
+            return Ok();
         }
     }
 }

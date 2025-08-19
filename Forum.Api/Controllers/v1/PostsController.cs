@@ -36,7 +36,7 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpPost("create-post")]
-        public async Task<IActionResult> CreatePost([FromBody] CreatePostRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreatePost(CreatePostRequest request, CancellationToken cancellationToken)
         {
             var command = _mapper.Map<CreatePostCommand>(request);
             command.userId = User.GetUserId();
@@ -61,7 +61,11 @@ namespace Forum.Api.Controllers.v1
         [HttpDelete("{postId}")]
         public async Task<IActionResult> DeletePost(int postId, CancellationToken cancellationToken)
         {
-            var command = new DeletePostCommand { PostId = postId };
+            var command = new DeletePostCommand
+            {
+                PostId = postId,
+                UserId = User.GetUserId()
+            };
             await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return NoContent();
         }

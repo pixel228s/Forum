@@ -12,6 +12,12 @@ namespace Forum.Infrastructure.Implementations
         {
         }
 
+        public async Task DeleteUserComments(int userId, CancellationToken cancellationToken)
+        {
+            await _dbSet.Where(x => x.UserId == userId)
+                .ExecuteDeleteAsync(cancellationToken);
+        }
+
         public Task<Comment?> GetCommentById(int id, bool isIncluded, CancellationToken cancellationToken)
         {
             var comment = _dbSet

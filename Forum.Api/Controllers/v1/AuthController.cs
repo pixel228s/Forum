@@ -43,7 +43,7 @@ namespace Forum.Api.Controllers.v1
 
         [HttpPost("register")]
         [SwaggerResponse(200, "User created successfully")]
-        public async Task<IActionResult> RegisterUser(RegisterUserCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> RegisterUser([FromBody]RegisterUserCommand command, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(result);

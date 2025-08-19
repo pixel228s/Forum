@@ -25,8 +25,8 @@ namespace Forum.Infrastructure.Implementations
         public Task<User?> GetUserById(int id, CancellationToken cancellationToken)
         {
             var user = _forumDbContext.Users
-               .Where(u => u.Id == id)
                .AsNoTracking()
+               .Where(u => u.Id == id)
                .FirstOrDefaultAsync(cancellationToken);
             return user;
         }

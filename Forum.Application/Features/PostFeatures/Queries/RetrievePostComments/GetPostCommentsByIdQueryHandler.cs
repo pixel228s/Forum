@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Forum.Application.Common.Dtos.Comments.Responses;
-using Forum.Application.Exceptions;
 using Forum.Domain.Interfaces;
 using MediatR;
 

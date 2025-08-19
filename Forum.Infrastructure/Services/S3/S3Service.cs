@@ -36,6 +36,7 @@ namespace Forum.Infrastructure.Services.S3
             catch (AmazonS3Exception ex)
             {
                 _logger.LogError(ex, $"File: {path} failed to delete");
+                throw;
             }
         }
 
