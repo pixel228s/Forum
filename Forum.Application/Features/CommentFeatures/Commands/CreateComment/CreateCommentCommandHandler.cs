@@ -36,7 +36,7 @@ namespace Forum.Application.Features.CommentFeatures.Commands.CreateComment
                 throw new ObjectNotFoundException("No such post found");
             }
 
-            await _commentRepository.AddAsync(comment, cancellationToken);
+            await _commentRepository.AddAsync(comment, cancellationToken).ConfigureAwait(false);
 
             return _mapper.Map<CommentResponseDto>(comment);
         }

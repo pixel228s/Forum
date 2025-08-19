@@ -31,7 +31,7 @@ namespace Forum.Application.Features.UserFeatures.Commands.UpdateUser
             user.UserName = request.UserName ?? user.UserName;
             user.picUrl = request.PfpUrl ?? user.picUrl;
 
-            await _userManager.UpdateAsync(user);
+            await _userManager.UpdateAsync(user).ConfigureAwait(false);
 
             return _mapper.Map<UserResponse>(user);
         }

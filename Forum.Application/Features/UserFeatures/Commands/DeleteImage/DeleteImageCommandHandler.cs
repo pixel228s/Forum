@@ -25,7 +25,7 @@ namespace Forum.Application.Features.UserFeatures.Commands.DeleteImage
 
         public async Task<Unit> Handle(DeleteImageCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByIdAsync(request.UserId);
+            var user = await _userManager.FindByIdAsync(request.UserId).ConfigureAwait(false);
 
             if (user == null)
             {

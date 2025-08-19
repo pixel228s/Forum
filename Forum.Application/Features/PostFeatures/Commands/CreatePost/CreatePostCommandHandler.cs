@@ -40,7 +40,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.CreatePost
                 string bucket = _config["AWS:BucketName"]!;
                 var uploadRequest = FileUploadRequest
                     .CreateImage(folder, request.Image);
-                string? urlToStore = await _s3Service.UploadFile(uploadRequest, bucket, cancellationToken);
+                string? urlToStore = await _s3Service.UploadFile(uploadRequest, bucket, cancellationToken).ConfigureAwait(false);
 
                 if (urlToStore == null)
                 {
@@ -49,7 +49,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.CreatePost
 
                 post.ImageUrl = urlToStore;
             }
-            await _postRepository.AddAsync(post, cancellationToken);
+            await _postRepository.AddAsync(post, cancellationToken).ConfigureAwait(false);
 
             return _mapper.Map<PostResponse>(post);
         }

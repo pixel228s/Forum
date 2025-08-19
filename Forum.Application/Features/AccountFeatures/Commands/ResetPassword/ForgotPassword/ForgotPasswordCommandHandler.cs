@@ -35,7 +35,7 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ResetPassword.Send
                 .GenerateTwoFactorTokenAsync(user!, "ResetPassword")
                 .ConfigureAwait(false);
 
-            await _emailSender.SendEmailAsync(request.Email, subject: "Otp", otp);
+            await _emailSender.SendEmailAsync(request.Email, subject: "Otp", otp).ConfigureAwait(false);
             return Unit.Value; 
         }
     }

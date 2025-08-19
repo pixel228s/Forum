@@ -48,7 +48,8 @@ namespace Forum.Application.Features.UserFeatures.Commands.UploadProfilePicture
 
             var uploadRequest = FileUploadRequest
                    .CreateImage(folder, request.Image);
-            string? urlToStore = await _s3Service.UploadFile(uploadRequest, bucket, cancellationToken);
+            string? urlToStore = await _s3Service.UploadFile(uploadRequest, bucket, cancellationToken)
+                .ConfigureAwait(false);
 
             if (urlToStore == null)
             {

@@ -30,7 +30,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.DeletePost
                 throw new ActionForbiddenException();
             }
 
-            await _postRepository.RemoveAsync(post, cancellationToken);
+            await _postRepository.RemoveAsync(post, cancellationToken).ConfigureAwait(false);
 
             return Unit.Value;
         }

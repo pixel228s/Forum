@@ -21,7 +21,8 @@ namespace Forum.Application.Features.PostFeatures.Commands.UpdatePost
 
         public async Task<PostResponse> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
         {
-            var post = await _postRepository.GetPostByIdAsync(request.Id, cancellationToken, false, false);
+            var post = await _postRepository
+                .GetPostByIdAsync(request.Id, cancellationToken, false, false).ConfigureAwait(false);
 
             if (post == null)
             {
@@ -36,7 +37,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.UpdatePost
             post.Title = request.Title ?? post.Title;
             post.Content = request.Content ?? post.Content;
 
-            await _postRepository.UpdateEntity(post, cancellationToken);
+            await _postRepository.UpdateEntity(post, cancellationToken).ConfigureAwait(false);
 
             return _mapper.Map<PostResponse>(post);
         }

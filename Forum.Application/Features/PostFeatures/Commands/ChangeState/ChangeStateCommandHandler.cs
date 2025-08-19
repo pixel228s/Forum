@@ -27,7 +27,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.ChangeState
             }
 
             post.State = request.IsAccepted ? State.Show : State.Hide;
-            await _postRepository.UpdateEntity(post, cancellationToken);
+            await _postRepository.UpdateEntity(post, cancellationToken).ConfigureAwait(false);
 
             return Unit.Value;
         }

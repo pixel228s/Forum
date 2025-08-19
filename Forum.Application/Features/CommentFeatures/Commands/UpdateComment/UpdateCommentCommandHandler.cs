@@ -36,7 +36,7 @@ namespace Forum.Application.Features.CommentFeatures.Commands.UpdateComment
 
             comment.Text = request.Content ?? comment.Text;
 
-            await _commentRepository.UpdateEntity(comment, cancellationToken);
+            await _commentRepository.UpdateEntity(comment, cancellationToken).ConfigureAwait(false);
 
             return _mapper.Map<CommentResponseDto>(comment);
         }

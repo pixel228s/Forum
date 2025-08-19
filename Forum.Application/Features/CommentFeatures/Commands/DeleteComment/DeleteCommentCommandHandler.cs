@@ -28,7 +28,7 @@ namespace Forum.Application.Features.CommentFeatures.Commands.DeleteComment
                 throw new ActionForbiddenException();
             }
 
-            await _commentRepository.RemoveAsync(comment, cancellationToken);
+            await _commentRepository.RemoveAsync(comment, cancellationToken).ConfigureAwait(false);
             return Unit.Value;
         }
     }
