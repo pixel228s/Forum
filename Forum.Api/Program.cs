@@ -4,8 +4,6 @@ using Forum.Application.DependencyInjection;
 using Forum.Infrastructure.DependencyInjection;
 using Forum.Persistence;
 using Forum.Persistence.Seed;
-
-
 namespace Forum.Api
 {
     public class Program
@@ -22,6 +20,7 @@ namespace Forum.Api
                 .AddEndpointsApiExplorer()
                 .AddSwaggerGen()
                 .AddVersioning()
+                .AddCachingService(builder.Configuration)
                 .AddSwaggerConfigurations()
                 .AddHealthCheckService()
                 .AddIdentity()
@@ -43,6 +42,7 @@ namespace Forum.Api
                 app.UseSwaggerUI();
             }
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<BanCheckMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

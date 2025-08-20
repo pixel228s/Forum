@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public int CreationDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public string BanReason { get; set; }
         public DateTime? BanEndDate { get; set; }
     }

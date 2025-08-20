@@ -14,7 +14,7 @@ namespace Forum.Persistence.Data.Configurations
 
             builder.Property(x => x.BanReason)
                 .HasMaxLength(500)
-                .HasColumnName("nvarchar");
+                .HasColumnType("nvarchar");
 
             builder.HasOne(u => u.User)
                 .WithOne(b => b.BanInfo)

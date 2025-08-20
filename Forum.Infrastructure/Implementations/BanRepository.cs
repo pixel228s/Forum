@@ -1,6 +1,7 @@
 ﻿using Forum.Domain.Interfaces;
 using Forum.Domain.Models;
 using Forum.Persistence.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Forum.Infrastructure.Implementations
 {
@@ -10,19 +11,27 @@ namespace Forum.Infrastructure.Implementations
         {
         }
 
-        public Task<IEnumerable<Ban>> GetAllBans(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Ban>> GetAllBans(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
-        public Task<Ban> GetBanById(int id, CancellationToken cancellationToken)
+        public Task<Ban?> GetBanById(int id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _dbSet.AsNoTracking()
+                .Where(x => x.Id == id)
+                .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public Task<IEnumerable<Ban>> GetExpiredBans(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Ban>> GetExpiredBans(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var expiredBans = await _dbSet
+                .AsNoTracking()
+                .Where(x => x.BanEndDate > DateTime.UtcNow)
+                .ToListAsync(cancellationToken);
+            return expiredBans;
         }
     }
 }

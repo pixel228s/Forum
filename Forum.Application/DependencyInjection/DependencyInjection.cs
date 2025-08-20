@@ -45,5 +45,15 @@ namespace Forum.Application.DependencyInjection
 
             return services;
         }
+
+        public static IServiceCollection AddCachingService(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddStackExchangeRedisCache(redisOptions =>
+            {
+                string connection = configuration.GetConnectionString("Redis")!;
+                redisOptions.Configuration = connection;
+            });
+            return services;
+        }
     }
 }

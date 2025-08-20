@@ -7,6 +7,8 @@ using Forum.Domain.Models;
 using Forum.Domain.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace Forum.Application.Features.AdminFeatures.Commands.BanUser
 {
@@ -16,16 +18,19 @@ namespace Forum.Application.Features.AdminFeatures.Commands.BanUser
         private readonly IMapper _mapper;
         private readonly IBanRepository _banRepository;
         private readonly ITransactionFactory _transactionFactory;
+        private readonly IDistributedCache _distributedCache;
 
         public BanUserCommandHandler(UserManager<User> userManager, 
             IMapper mapper,
             IBanRepository banRepository,
-            ITransactionFactory transactionFactory)
+            ITransactionFactory transactionFactory,
+            IDistributedCache distributedCache)
         {
             _userManager = userManager;
             _mapper = mapper;
             _banRepository = banRepository;
             _transactionFactory = transactionFactory;
+            _distributedCache = distributedCache;
         }
 
         public async Task<BanInfoResponse> Handle(BanUserCommand request, CancellationToken cancellationToken)
@@ -43,11 +48,10 @@ namespace Forum.Application.Features.AdminFeatures.Commands.BanUser
             }
 
             user.IsBanned = true;
-
             var ban = _mapper.Map<Ban>(request); 
-
          
-            using var transaction = await _transactionFactory.OpenTransactionAsync(cancellationToken);
+            using var transaction = await _transactionFactory.OpenTransactionAsync(cancellationToken)
+                .ConfigureAwait(false);
 
             try
             {
@@ -60,6 +64,10 @@ namespace Forum.Application.Features.AdminFeatures.Commands.BanUser
                 }
 
                 await _banRepository.AddAsync(ban, cancellationToken).ConfigureAwait(false);
+
+                string key = $"is-banned:{user.Id}";
+                await _distributedCache.SetStringAsync(key, "true", cancellationToken)
+                    .ConfigureAwait(false);
 
                 await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
             }

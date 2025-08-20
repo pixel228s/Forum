@@ -31,11 +31,11 @@ namespace Forum.Application.Common.SecurityService
         public async Task<TokenDto> CreateToken(User user, IList<string> roles)
         {
             var authConfigs = _configuration.GetSection("Authentication");
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authConfigs["SecretForKey"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authConfigs["SecretForKey"]!));
             var signInCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new List<Claim>
                 {
-                   new(ClaimTypes.Name, user.UserName),
+                   new(ClaimTypes.Name, user.UserName!),
                    new(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 };
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

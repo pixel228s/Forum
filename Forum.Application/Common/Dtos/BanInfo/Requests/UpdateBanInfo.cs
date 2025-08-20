@@ -2,7 +2,7 @@
 {
     public class UpdateBanInfo
     {
-        public string BanReason { get; set; }
+        public string? BanReason { get; set; }
         public DateTime? BanEndDate { get; set; }
     }
 }

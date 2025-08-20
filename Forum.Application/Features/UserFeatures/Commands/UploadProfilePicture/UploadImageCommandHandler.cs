@@ -58,7 +58,7 @@ namespace Forum.Application.Features.UserFeatures.Commands.UploadProfilePicture
 
             user.picUrl = urlToStore;
 
-            await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user);
 
             return Unit.Value;
         }
