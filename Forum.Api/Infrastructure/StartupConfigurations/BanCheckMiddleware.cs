@@ -38,8 +38,8 @@ namespace Forum.Api.Infrastructure.StartupConfigurations
                         return;
                     }
                 }
-                await _requestDelegate(httpContext);
             }
+            await _requestDelegate(httpContext);
         }
     }
 }

@@ -7,9 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Dtos\Auth\Requests\" />
-    <Folder Include="Features\BanFeatures\Commands\RevokeBan\" />
-    <Folder Include="Features\BanFeatures\Commands\UnbanUser\" />
     <Folder Include="Features\BanFeatures\Queries\GetBanByUserId\" />
   </ItemGroup>
 

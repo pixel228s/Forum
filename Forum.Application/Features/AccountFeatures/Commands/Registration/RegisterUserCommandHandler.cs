@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Forum.Application.Exceptions;
-using Forum.Application.Exceptions.Models;
 using Forum.Domain.Models.Users;
 using Forum.Infrastructure.Services.S3;
-using Forum.Infrastructure.Services.S3.Models.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +17,6 @@ namespace Forum.Application.Features.AccountFeatures.Commands.Registration
         public RegisterUserCommandHandler(
             UserManager<User> userManager, 
             IMapper mapper,
-            IS3Service s3Service,
             IConfiguration config)
         {
             _userManager = userManager;
@@ -38,7 +35,7 @@ namespace Forum.Application.Features.AccountFeatures.Commands.Registration
             if (!result.Succeeded)
             {
                 string message = string.Join("; ", result.Errors.Select(e => e.Description));
-                throw new RegistrationException(message : message);
+                throw new RegistrationException(message: message);
             }
 
             await _userManager.AddToRoleAsync(user, "Member")

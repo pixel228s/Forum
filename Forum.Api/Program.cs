@@ -41,12 +41,12 @@ namespace Forum.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseMiddleware<BanCheckMiddleware>();
             app.UseHttpsRedirection();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
            
             app.MapControllers();
 
