@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Forum.Application.Common.Dtos.Posts.Responses;
 using Forum.Application.Exceptions;
+using Forum.Application.Exceptions.Models;
+using Forum.Domain.Entities.Posts.Enums;
 using Forum.Domain.Interfaces;
 using MediatR;
 
@@ -32,6 +34,11 @@ namespace Forum.Application.Features.PostFeatures.Commands.UpdatePost
             if (post.UserId != request.UserId!)
             {
                 throw new ActionForbiddenException();
+            }
+
+            if (post.Status == Status.Inactive)
+            {
+                throw new AppException("Can't update an inactive post");
             }
 
             post.Title = request.Title ?? post.Title;

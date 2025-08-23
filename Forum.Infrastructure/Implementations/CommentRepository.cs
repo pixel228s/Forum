@@ -18,12 +18,13 @@ namespace Forum.Infrastructure.Implementations
                 .ExecuteDeleteAsync(cancellationToken);
         }
 
-        public Task<Comment?> GetCommentById(int id, bool isIncluded, CancellationToken cancellationToken)
+        public Task<Comment?> GetCommentById(int id, bool isIncluded, bool postIncluded, CancellationToken cancellationToken)
         {
             var comment = _dbSet
                 .AsNoTracking()
                 .Where(x => x.Id == id)
                 .CustomInclude(c => c.User, isIncluded)
+                .CustomInclude(p => p.Post, postIncluded)
                 .FirstOrDefaultAsync();
             return comment;
         }

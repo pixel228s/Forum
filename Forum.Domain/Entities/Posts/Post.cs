@@ -1,4 +1,5 @@
 ﻿using Forum.Domain.Entities.Comments;
+using Forum.Domain.Entities.Posts.Enums;
 using Forum.Domain.Models.Base;
 using Forum.Domain.Models.Posts.Enums;
 using Forum.Domain.Models.Users;
@@ -12,6 +13,7 @@ namespace Forum.Domain.Models.Posts
         public string? ImageUrl { get; set; }
         public string Content { get; set; }
         public string? Title { get; set; }
+        public Status Status { get; set; } = Status.Active;
 
         public User User { get; set; }
         public ICollection<Comment>? comments { get; set; }

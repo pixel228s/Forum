@@ -20,7 +20,7 @@ namespace Forum.Application.Features.CommentFeatures.Queries.GetComment
 
         public async Task<CommentResponseDto> Handle(GetCommentByIdQuery request, CancellationToken cancellationToken)
         {
-            var comment = await _commentRepository.GetCommentById(request.Id, true, cancellationToken)
+            var comment = await _commentRepository.GetCommentById(request.Id, true, false, cancellationToken)
                 .ConfigureAwait(false); 
 
             if (comment == null)

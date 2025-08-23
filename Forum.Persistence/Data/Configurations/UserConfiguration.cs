@@ -14,6 +14,8 @@ namespace Forum.Persistence.Data.Configurations
 
             builder.HasIndex(x => x.Email).IsUnique();
 
+            builder.HasIndex(x => x.UserName).IsUnique();
+
             builder.Property(x => x.RefreshToken).HasMaxLength(50);
 
             builder.Property(x => x.IsAdmin).HasDefaultValue(false);
@@ -28,8 +30,6 @@ namespace Forum.Persistence.Data.Configurations
             builder.Property(x => x.UserName)
                 .IsRequired()
                 .HasColumnType("varchar(100)");
-
-            //builder.Property(x => x.IsBanned).HasDefaultValue(false);
 
             builder
                 .Ignore(user => user.ConcurrencyStamp)

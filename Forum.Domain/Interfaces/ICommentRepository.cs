@@ -6,7 +6,7 @@ namespace Forum.Domain.Interfaces
     {
         Task<IQueryable<CommentWithUserInfo>> GetCommentsByPostId(int postID, bool include, CancellationToken cancellationToken);
         Task<IEnumerable<Comment>> GetCommentsByUserId(int userId, CancellationToken cancellationToken); 
-        Task<Comment?> GetCommentById (int id, bool isIncluded, CancellationToken cancellationToken);
+        Task<Comment?> GetCommentById (int id, bool isIncluded, bool postIncluded, CancellationToken cancellationToken);
         Task DeleteUserComments(int userId, CancellationToken cancellationToken);
     }
 }

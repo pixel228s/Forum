@@ -14,6 +14,8 @@ namespace Forum.Persistence.Data.Configurations
 
             builder.HasIndex(x => x.UserId).IsUnique();
 
+            builder.HasIndex(x => x.BanEndDate);
+
             builder.Property(x => x.BanReason)
                 .HasMaxLength(500)
                 .HasColumnType("nvarchar");

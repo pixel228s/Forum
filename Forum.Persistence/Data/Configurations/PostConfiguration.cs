@@ -1,4 +1,5 @@
-﻿using Forum.Domain.Models.Posts;
+﻿using Forum.Domain.Entities.Posts.Enums;
+using Forum.Domain.Models.Posts;
 using Forum.Domain.Models.Posts.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -18,6 +19,8 @@ namespace Forum.Persistence.Data.Configurations
 
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
+
+            builder.Property(x => x.Status).HasDefaultValue(Status.Active);
 
             builder.Property(x => x.Content)
                 .HasColumnType("nvarchar(4000)")

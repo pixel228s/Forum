@@ -1,4 +1,5 @@
 ﻿using Forum.Domain.Entities.Posts;
+using Forum.Domain.Entities.Posts.Enums;
 using Forum.Domain.Interfaces;
 using Forum.Domain.Models.Posts;
 using Forum.Domain.Models.Posts.Enums;
@@ -12,6 +13,18 @@ namespace Forum.Infrastructure.Implementations
     {
         public PostRepository(ForumDbContext dbContext) : base(dbContext)
         {
+        }
+
+        public async Task DeactivatePosts(CancellationToken cancellationToken)
+        {
+            DateTime difference = DateTime.UtcNow.AddDays(-7);
+            await _dbSet
+                .Where(p => p.Status == Status.Active)
+                .Where(p => !p.comments!.Any() && p.CreatedAt < difference 
+                || p.comments!.Any() && p.comments!.Max(c => c.CreatedAt) < difference)
+                .ExecuteUpdateAsync(
+                    setters => setters.SetProperty(p => p.Status, Status.Inactive),
+                    cancellationToken);
         }
 
         public async Task<IEnumerable<PostWithCommentCount>> GetAllPosts(CancellationToken cancellationToken)

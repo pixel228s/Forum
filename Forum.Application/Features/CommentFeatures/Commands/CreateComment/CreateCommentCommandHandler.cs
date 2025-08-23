@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Forum.Application.Common.Dtos.Comments.Responses;
 using Forum.Application.Exceptions;
+using Forum.Application.Exceptions.Models;
 using Forum.Domain.Entities.Comments;
+using Forum.Domain.Entities.Posts.Enums;
 using Forum.Domain.Interfaces;
 using MediatR;
 
@@ -34,6 +36,11 @@ namespace Forum.Application.Features.CommentFeatures.Commands.CreateComment
             if (post == null)
             {
                 throw new ObjectNotFoundException("No such post found");
+            }
+
+            if (post.Status == Status.Inactive)
+            {
+                throw new AppException("Can't comment on a inactive post");
             }
 
             await _commentRepository.AddAsync(comment, cancellationToken).ConfigureAwait(false);

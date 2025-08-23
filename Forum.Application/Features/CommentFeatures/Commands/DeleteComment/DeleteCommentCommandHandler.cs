@@ -16,7 +16,7 @@ namespace Forum.Application.Features.CommentFeatures.Commands.DeleteComment
         public async Task<Unit> Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
         {
             var comment = await _commentRepository
-                .GetCommentById(request.CommentId, false, cancellationToken).ConfigureAwait(false);
+                .GetCommentById(request.CommentId, false, false, cancellationToken).ConfigureAwait(false);
 
             if (comment == null)
             {
