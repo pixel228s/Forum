@@ -26,11 +26,6 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
             var user = await _userManager.FindByNameAsync(request.username);
             if (user != null)
             {
-                //if (user.IsBanned)
-                //{
-
-                //}
-
                 bool isPasswordCorrect = await _userManager.CheckPasswordAsync(user, request.password);
                 if (isPasswordCorrect)
                 {
@@ -45,7 +40,7 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
                     return tokenDto;
                 }
             }
-            throw new AuthenticationException();
+            throw new AuthenticationException("Incorrect email or password");
         }
     }
 }

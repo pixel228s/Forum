@@ -12,6 +12,8 @@ namespace Forum.Persistence.Data.Configurations
 
             builder.HasKey(x => x.Id);
 
+            builder.HasIndex(x => x.UserId).IsUnique();
+
             builder.Property(x => x.BanReason)
                 .HasMaxLength(500)
                 .HasColumnType("nvarchar");

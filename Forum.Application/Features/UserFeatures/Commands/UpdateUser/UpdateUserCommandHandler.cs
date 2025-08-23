@@ -27,9 +27,25 @@ namespace Forum.Application.Features.UserFeatures.Commands.UpdateUser
                 throw new ObjectNotFoundException();
             }
 
-            user.Email = request.Email ?? user.Email;
-            user.UserName = request.UserName ?? user.UserName;
-            user.picUrl = request.PfpUrl ?? user.picUrl;
+            if (request.Email != null)
+            {
+                var existingUser = await _userManager.FindByEmailAsync(request.Email);
+                if (existingUser != null)
+                {
+                    throw new ConflictException("User with this Email/Username already exists.");
+                }
+                user.Email = request.Email;
+            }
+
+            if (request.UserName != null)
+            {
+                var existingUser = await _userManager.FindByNameAsync(request.UserName);
+                if (existingUser != null)
+                {
+                    throw new ConflictException("User with this Email/Username already exists.");
+                }
+                user.UserName = request.UserName;
+            }
 
             await _userManager.UpdateAsync(user).ConfigureAwait(false);
 

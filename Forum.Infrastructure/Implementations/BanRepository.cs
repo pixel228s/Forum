@@ -33,5 +33,13 @@ namespace Forum.Infrastructure.Implementations
                 .ToListAsync(cancellationToken);
             return expiredBans;
         }
+
+        public async Task<int> DeleteExpiredBans(CancellationToken cancellationToken)
+        {
+            var deletedColumns = await 
+                _dbSet.Where(x => x.BanEndDate <= DateTime.UtcNow)
+                .ExecuteDeleteAsync(cancellationToken);
+            return deletedColumns;
+        }
     }
 }

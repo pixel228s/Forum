@@ -29,7 +29,7 @@ namespace Forum.Persistence.Data.Configurations
                 .IsRequired()
                 .HasColumnType("varchar(100)");
 
-            builder.Property(x => x.IsBanned).HasDefaultValue(false);
+            //builder.Property(x => x.IsBanned).HasDefaultValue(false);
 
             builder
                 .Ignore(user => user.ConcurrencyStamp)

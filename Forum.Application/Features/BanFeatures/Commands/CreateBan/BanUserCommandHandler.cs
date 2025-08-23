@@ -17,19 +17,16 @@ namespace Forum.Application.Features.AdminFeatures.Commands.BanUser
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
         private readonly IBanRepository _banRepository;
-        private readonly ITransactionFactory _transactionFactory;
         private readonly IDistributedCache _distributedCache;
 
-        public BanUserCommandHandler(UserManager<User> userManager, 
+        public BanUserCommandHandler(UserManager<User> userManager,
             IMapper mapper,
             IBanRepository banRepository,
-            ITransactionFactory transactionFactory,
             IDistributedCache distributedCache)
         {
             _userManager = userManager;
             _mapper = mapper;
             _banRepository = banRepository;
-            _transactionFactory = transactionFactory;
             _distributedCache = distributedCache;
         }
 
@@ -42,39 +39,25 @@ namespace Forum.Application.Features.AdminFeatures.Commands.BanUser
                 throw new ObjectNotFoundException();
             }
 
-            if (user.IsBanned)
+            string key = $"is-banned:{user.Id}";
+            var isBanned = await _distributedCache.GetStringAsync(key)
+                        .ConfigureAwait(false);
+            if (isBanned != null)
             {
-                throw new AppException("User is already banned");
+                throw new ConflictException("This user is already banned");
             }
 
-            user.IsBanned = true;
-            var ban = _mapper.Map<Ban>(request); 
-         
-            using var transaction = await _transactionFactory.OpenTransactionAsync(cancellationToken)
+            var ban = _mapper.Map<Ban>(request);
+
+            await _banRepository.AddAsync(ban, cancellationToken).ConfigureAwait(false);
+
+            var ttl = request.BanEndDate - DateTime.UtcNow;
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = ttl
+            };
+            await _distributedCache.SetStringAsync(key, "true", options, cancellationToken)
                 .ConfigureAwait(false);
-
-            try
-            {
-                var result = await _userManager.UpdateAsync(user).ConfigureAwait(false);
-
-                if (!result.Succeeded)
-                {
-                    string message = string.Join("; ", result.Errors.Select(e => e.Description));
-                    throw new AppException(message);
-                }
-                await _banRepository.AddAsync(ban, cancellationToken).ConfigureAwait(false);
-
-                string key = $"is-banned:{user.Id}";
-                await _distributedCache.SetStringAsync(key, "true", cancellationToken)
-                    .ConfigureAwait(false);
-
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-            }
-            catch(Exception) 
-            {
-                await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                throw;
-            } 
 
             return _mapper.Map<BanInfoResponse>(ban);
         }

@@ -12,16 +12,13 @@ namespace Forum.Application.Features.BanFeatures.Commands.UnbanUser
     {
         private readonly UserManager<User> _userManager;
         private readonly IBanRepository _banRepository;
-        private readonly ITransactionFactory _transactionFactory;
         private readonly IDistributedCache _distributedCache;
         public DeleteBanCommandHandler(UserManager<User> userManager, 
             IBanRepository banRepository,
-            ITransactionFactory transactionFactory,
             IDistributedCache distributedCache)
         {
             _userManager = userManager;
             _banRepository = banRepository;
-            _transactionFactory = transactionFactory;
             _distributedCache = distributedCache;
         }
 
@@ -35,36 +32,15 @@ namespace Forum.Application.Features.BanFeatures.Commands.UnbanUser
 
             var ban = await _banRepository.GetBanById(request.BanId, cancellationToken);
 
-            if (ban == null || ban.UserId.ToString() != request.UserId)
+            if (ban == null || ban.UserId != user.Id)
             {
                 throw new ObjectNotFoundException();
             }
+            await _banRepository.RemoveAsync(ban, cancellationToken).ConfigureAwait(false);
 
-            user.IsBanned = false;
-
-            using var transaction = await _transactionFactory.OpenTransactionAsync(cancellationToken)
-               .ConfigureAwait(false);
-            try
-            {
-                var result = await _userManager.UpdateAsync(user).ConfigureAwait(false);
-                if (!result.Succeeded)
-                {
-                    string message = string.Join("; ", result.Errors.Select(e => e.Description));
-                    throw new AppException(message);
-                }
-
-                await _banRepository.RemoveAsync(ban, cancellationToken).ConfigureAwait(false);
-
-                string key = $"is-banned:{user.Id}";
-                await _distributedCache.RemoveAsync(key).ConfigureAwait(false);
-
-                await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-            }
-            catch(Exception)
-            {
-                await transaction.RollbackAsync(cancellationToken).ConfigureAwait(false);
-                throw;
-            }
+            string key = $"is-banned:{user.Id}";
+            await _distributedCache.RemoveAsync(key).ConfigureAwait(false);
+       
             return Unit.Value;
         }
     }
