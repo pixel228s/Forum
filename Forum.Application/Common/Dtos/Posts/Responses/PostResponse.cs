@@ -1,4 +1,5 @@
-﻿using Forum.Domain.Models.Posts.Enums;
+﻿using Forum.Domain.Entities.Posts.Enums;
+using Forum.Domain.Models.Posts.Enums;
 
 namespace Forum.Application.Common.Dtos.Posts.Responses
 {
@@ -12,6 +13,8 @@ namespace Forum.Application.Common.Dtos.Posts.Responses
         public string AuthorUsername { get; set; }
         public string? UserProfilePicUrl { get; set; }
         public State State { get; set; }
+        public Status Status { get; set; }
+        public int CommentCount { get; set; }
         public DateTime CreationDate { get; set; }
     }
 }

@@ -91,7 +91,7 @@ namespace Forum.Api.Controllers.v1
             return Ok(result);
         }
 
-        [HttpGet("posts")]
+        [HttpGet()]
         public async Task<IActionResult> GetAllPosts(CancellationToken cancellationToken)
         {
             var posts = await _mediator.Send(new GetAllPostsQuery(), 

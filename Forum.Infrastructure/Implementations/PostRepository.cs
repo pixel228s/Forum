@@ -36,7 +36,7 @@ namespace Forum.Infrastructure.Implementations
                 {
                     post = post,
                     authorUsername = post.User.UserName!,
-                    authorPfp = post.ImageUrl,
+                    authorPfp = post.User.picUrl,
                     commentCount = post.comments!.Count()
                 })
                 .ToListAsync(cancellationToken)
