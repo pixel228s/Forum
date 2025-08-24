@@ -16,9 +16,10 @@ using Forum.Application.Exceptions;
 using Forum.Domain.Models.Posts.Enums;
 using Forum.Application.Features.PostFeatures.Commands.DeletePost;
 using Forum.Application.Features.PostFeatures.Commands.UpdatePost;
-using Forum.Domain.Models.Users;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Forum.Domain.Entities.Posts.Enums;
+using Forum.Application.Features.PostFeatures.Queries.RetrievePendingPosts;
+using Forum.Domain.Parameters;
+using Forum.Application.Features.PostFeatures.Queries.RetrievePost;
 
 namespace Forum.Tests.ApplicationTests
 {
@@ -362,5 +363,87 @@ namespace Forum.Tests.ApplicationTests
             Assert.Equal("some Content", post.Content);
             Assert.Equal(post.Id, result.Id);
         }
+
+        [Fact]
+        public async Task GetAllPendingPosts_ShouldReturn_OnlyPendingPosts()
+        {
+            var parameters = new RequestParameters
+            {
+                PageNumber = 1,
+                PageSize = 2
+            };
+
+            _mapperMock
+                .Setup(m => m.Map<IEnumerable<PostResponse>>(It.IsAny<IEnumerable<Post>>()))
+                .Returns((IEnumerable<Post> posts) => posts.Select(p => new PostResponse
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Content = p.Content
+                }));
+
+            var query = new GetPendingPostsQuery(parameters);
+            var handler = new GetPendingPostsQueryHandler(_postRepoMock.Object, _mapperMock.Object);
+            var result = await handler.Handle(query, CancellationToken.None);
+
+            foreach (PostResponse postResponse in result)
+            {
+                Assert.Equal(State.Pending, postResponse.State);
+            }
+        }
+
+        [Fact]
+        public async Task GetPostById_Should_ThrowException_If_PostNotFound()
+        {
+            var post = new Post
+            {
+                Id = -1,
+                Content = "some content",
+                Title = "some title",
+                UserId = 5
+            };
+
+            var query = new GetPostByIdQuery
+            {
+                PostId = post.Id,
+            };
+
+            var handler = new GetPostByIdQueryHandler(_postRepoMock.Object, _mapperMock.Object);
+
+            var exc = await Assert.ThrowsAsync<ObjectNotFoundException>(() => handler.Handle(query, CancellationToken.None));
+            Assert.Equal("Post not found!", exc.Message);
+        }
+
+        [Fact]
+        public async Task GetPost_ById_When_Post_IsFound()
+        {
+            var post = new Post
+            {
+                Id = 1,
+                Content = "some content",
+                Title = "some title",
+                UserId = 5
+            };
+
+            var query = new GetPostByIdQuery
+            {
+                PostId = post.Id,
+            };
+
+            _postRepoMock.Setup(p => p.GetPostByIdAsync(query.PostId, It.IsAny<CancellationToken>(), It.IsAny<bool>(), It.IsAny<bool>()))
+                .ReturnsAsync(post);
+
+            _mapperMock
+                       .Setup(m => m.Map<PostResponse>(It.IsAny<Post>()))
+                       .Returns((Post p) => new PostResponse { Id = p.Id, Title = p.Title, Content = p.Content, AuthorId = p.UserId });
+
+            var handler = new GetPostByIdQueryHandler(_postRepoMock.Object, _mapperMock.Object);
+            var result = await handler.Handle(query, CancellationToken.None);
+            Assert.Equal(post.Id, result.Id);
+            Assert.Equal(post.Content, result.Content); 
+            Assert.Equal(post.Title, result.Title);
+            Assert.Equal(post.UserId, result.AuthorId);
+        }
+
     }
 }

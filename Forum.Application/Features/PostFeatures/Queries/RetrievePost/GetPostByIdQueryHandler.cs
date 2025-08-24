@@ -27,7 +27,7 @@ namespace Forum.Application.Features.PostFeatures.Queries.RetrievePost
 
             if (post == null)
             {
-                throw new ObjectNotFoundException();
+                throw new ObjectNotFoundException("Post not found!");
             }
 
             return _mapper.Map<PostResponse>(post);
