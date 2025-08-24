@@ -20,7 +20,7 @@ using Forum.Domain.Models.Users;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using Forum.Domain.Entities.Posts.Enums;
 
-namespace Forum.Application.Tests
+namespace Forum.Tests.ApplicationTests
 {
     public class PostTests
     {
@@ -75,7 +75,7 @@ namespace Forum.Application.Tests
         [Fact]
         public void Should_Have_Error_When_Content_Is_Empty()
         {
-    
+
             var model = new CreatePostCommand { Title = "some Valid Title", Content = "", userId = 1 };
             var result = _validator.TestValidate(model);
 
