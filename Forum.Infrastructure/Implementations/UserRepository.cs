@@ -1,5 +1,6 @@
 ﻿using Forum.Domain.Interfaces;
 using Forum.Domain.Models.Users;
+using Forum.Domain.Parameters;
 using Forum.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,10 +32,12 @@ namespace Forum.Infrastructure.Implementations
             return user;
         }
 
-        public async Task<IEnumerable<User>> GetAllUsers(CancellationToken cancellationToken)
+        public async Task<IEnumerable<User>> GetAllUsers(RequestParameters requestParameters, CancellationToken cancellationToken)
         {
             var users = await _forumDbContext.Users
                 .AsNoTracking()
+                .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
+                .Take(requestParameters.PageSize)
                 .ToListAsync(cancellationToken);
             return users;
         }

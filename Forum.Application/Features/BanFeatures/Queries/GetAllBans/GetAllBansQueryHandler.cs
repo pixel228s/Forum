@@ -19,7 +19,7 @@ namespace Forum.Application.Features.AdminFeatures.Queries.GetAllBans
         public async Task<IEnumerable<BanInfoResponse>> Handle(GetAllBansQuery request, CancellationToken cancellationToken)
         {
             var bans = await _banRepository
-                .GetAllBans(cancellationToken)
+                .GetAllBans(request.parameters, cancellationToken)
                 .ConfigureAwait(false);
             return _mapper.Map<IEnumerable<BanInfoResponse>>(bans);
         }

@@ -18,7 +18,7 @@ namespace Forum.Application.Features.PostFeatures.Queries.RetrievePostComments
         public async Task<IEnumerable<CommentResponseDto>> Handle(GetPostCommentsByIdQuery request, CancellationToken cancellationToken)
         {
             var comments = await _commentRepository
-                .GetCommentsByPostId(request.PostId, true, cancellationToken)
+                .GetCommentsByPostId(request.PostId, true, request.parameters, cancellationToken)
                 .ConfigureAwait(false);
 
             return _mapper.Map<IEnumerable<CommentResponseDto>>(comments);

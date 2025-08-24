@@ -5,6 +5,7 @@ using Forum.Application.Features.AdminFeatures.Commands.UpdateBan;
 using Forum.Application.Features.AdminFeatures.Queries.GetAllBans;
 using Forum.Application.Features.AdminFeatures.Queries.GetBanById;
 using Forum.Application.Features.BanFeatures.Commands.UnbanUser;
+using Forum.Domain.Parameters;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,9 +55,9 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllBans(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllBans([FromQuery] RequestParameters parameters, CancellationToken cancellationToken)
         {
-            var response = await _mediator.Send(new GetAllBansQuery(), cancellationToken)
+            var response = await _mediator.Send(new GetAllBansQuery(parameters), cancellationToken)
                 .ConfigureAwait(false);
             return Ok(response);
         }

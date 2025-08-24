@@ -1,5 +1,6 @@
 ﻿using Forum.Domain.Interfaces;
 using Forum.Domain.Models;
+using Forum.Domain.Parameters;
 using Forum.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +12,12 @@ namespace Forum.Infrastructure.Implementations
         {
         }
 
-        public async Task<IEnumerable<Ban>> GetAllBans(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Ban>> GetAllBans(RequestParameters requestParameters, CancellationToken cancellationToken)
         {
             return await _dbSet
                 .AsNoTracking()
+                .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
+                .Take(requestParameters.PageSize)
                 .ToListAsync(cancellationToken);
         }
 

@@ -4,9 +4,11 @@ using Forum.Application.Features.UserFeatures.Commands.DeleteImage;
 using Forum.Application.Features.UserFeatures.Commands.DeleteUser;
 using Forum.Application.Features.UserFeatures.Commands.UpdateUser;
 using Forum.Application.Features.UserFeatures.Commands.UploadProfilePicture;
+using Forum.Application.Features.UserFeatures.Queries.GetAllUsers;
 using Forum.Application.Features.UserFeatures.Queries.GetUserPosts;
 using Forum.Application.Features.UserFeatures.Queries.RetrieveUserByEmail;
 using Forum.Application.Features.UserFeatures.Queries.RetrieveUserById;
+using Forum.Domain.Parameters;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +36,7 @@ namespace Forum.Api.Controllers.v1
             _mapper = mapper;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         [SwaggerResponse(200, "User found successfully")]
         [SwaggerResponse(404, "User not found")]
         [SwaggerResponse(401, "Action not authorized")]
@@ -45,11 +47,11 @@ namespace Forum.Api.Controllers.v1
             return Ok(user);
         }
 
-        [HttpGet()]
+        [HttpGet("email/{email}")]
         [SwaggerResponse(200, "User found successfully")]
         [SwaggerResponse(404, "User not found")]
         [SwaggerResponse(401, "Action not authorized")]
-        public async Task<IActionResult> GetUserByEmail([FromQuery] string email, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetUserByEmail(string email, CancellationToken cancellationToken)
         {
             var query = new GetUserByEmailQuery(email);
             var user = await _mediator.Send(query, cancellationToken).ConfigureAwait(false);
@@ -117,6 +119,17 @@ namespace Forum.Api.Controllers.v1
             };
             await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers([FromQuery]RequestParameters parameters, CancellationToken cancellationToken)
+        {
+            var query = new GetAllUsersQuery
+            {
+                parameters = parameters
+            };
+            var result = await _mediator.Send(query, cancellationToken).ConfigureAwait(false);
+            return Ok(result);
         }
     }
 }

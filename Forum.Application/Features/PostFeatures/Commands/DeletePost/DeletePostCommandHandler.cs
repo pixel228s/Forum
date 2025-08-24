@@ -10,8 +10,7 @@ namespace Forum.Application.Features.PostFeatures.Commands.DeletePost
     {
         private readonly IPostRepository _postRepository;
 
-        public DeletePostCommandHandler(IPostRepository postRepository, 
-            IHttpContextAccessor httpContextAccessor) 
+        public DeletePostCommandHandler(IPostRepository postRepository) 
         { 
             _postRepository = postRepository;
         }

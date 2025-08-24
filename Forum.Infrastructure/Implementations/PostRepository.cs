@@ -3,6 +3,7 @@ using Forum.Domain.Entities.Posts.Enums;
 using Forum.Domain.Interfaces;
 using Forum.Domain.Models.Posts;
 using Forum.Domain.Models.Posts.Enums;
+using Forum.Domain.Parameters;
 using Forum.Infrastructure.Extensions;
 using Forum.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
@@ -27,10 +28,12 @@ namespace Forum.Infrastructure.Implementations
                     cancellationToken);
         }
 
-        public async Task<IEnumerable<PostWithCommentCount>> GetAllPosts(CancellationToken cancellationToken)
+        public async Task<IEnumerable<PostWithCommentCount>> GetAllPosts(RequestParameters requestParameters, CancellationToken cancellationToken)
         {
             var posts = await _dbSet
                 .AsNoTracking()
+                .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
+                .Take(requestParameters.PageSize)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(post => new PostWithCommentCount
                 {
@@ -45,12 +48,14 @@ namespace Forum.Infrastructure.Implementations
             return posts;
         }
 
-        public async Task<IEnumerable<Post>> GetPendingPosts(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Post>> GetPendingPosts(RequestParameters requestParameters, CancellationToken cancellationToken)
         {
             var hiddenPosts = await 
                 _dbSet
                 .AsNoTracking()
                 .IgnoreQueryFilters()
+                .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
+                .Take(requestParameters.PageSize)
                 .Where(x => x.State == State.Pending)
                 .ToListAsync(cancellationToken);
 

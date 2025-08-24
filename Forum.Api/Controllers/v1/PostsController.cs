@@ -9,6 +9,7 @@ using Forum.Application.Features.PostFeatures.Queries.GetAllPosts;
 using Forum.Application.Features.PostFeatures.Queries.RetrievePendingPosts;
 using Forum.Application.Features.PostFeatures.Queries.RetrievePost;
 using Forum.Application.Features.PostFeatures.Queries.RetrievePostComments;
+using Forum.Domain.Parameters;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -80,11 +81,12 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpGet("{postId}/comments")]
-        public async Task<IActionResult> GetCommentsByPostId(int postId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCommentsByPostId(int postId, [FromQuery]RequestParameters parameters,CancellationToken cancellationToken)
         {
             var query = new GetPostCommentsByIdQuery 
             {
-                PostId = postId 
+                PostId = postId,
+                parameters = parameters
             };
             var result = await _mediator.Send(query, cancellationToken)
                 .ConfigureAwait(false);
@@ -92,10 +94,9 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetAllPosts(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAllPosts([FromQuery]RequestParameters parameters, CancellationToken cancellationToken)
         {
-            var posts = await _mediator.Send(new GetAllPostsQuery(), 
-                cancellationToken)
+            var posts = await _mediator.Send(new GetAllPostsQuery(parameters), cancellationToken)
                 .ConfigureAwait(false);
             return Ok(posts);
         }
@@ -115,9 +116,9 @@ namespace Forum.Api.Controllers.v1
 
         [Authorize(Roles = "Admin")]
         [HttpGet("pending-posts")]
-        public async Task<IActionResult> GetPendingPosts(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetPendingPosts([FromQuery] RequestParameters parameters, CancellationToken cancellationToken)
         {
-            var list = await _mediator.Send(new GetPendingPostsQuery(), cancellationToken)
+            var list = await _mediator.Send(new GetPendingPostsQuery(parameters), cancellationToken)
                 .ConfigureAwait(false);
             return Ok(list);
         }

@@ -1,5 +1,6 @@
 ﻿using Forum.Domain.Entities.Comments;
 using Forum.Domain.Interfaces;
+using Forum.Domain.Parameters;
 using Forum.Infrastructure.Extensions;
 using Forum.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
@@ -29,19 +30,22 @@ namespace Forum.Infrastructure.Implementations
             return comment;
         }
 
-        public Task<IQueryable<CommentWithUserInfo>> GetCommentsByPostId(int postID, bool include, CancellationToken cancellationToken)
+        public Task<IQueryable<CommentWithUserInfo>> GetCommentsByPostId(int postID, bool include, RequestParameters requestParameters, CancellationToken cancellationToken)
         {
             var comments = _dbSet
                 .AsNoTracking()
                 .Where(x => x.PostId == postID)
                 .CustomInclude(u => u.User, include)
+                .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
+                .Take(requestParameters.PageSize)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(comment => new CommentWithUserInfo
                 {
                     Comment = comment,
                     UserName = comment.User.UserName!,
                     UserProfilePicUrl = comment.User.picUrl,
-                });
+                })
+                ;
 
             return Task.FromResult(comments);
         }

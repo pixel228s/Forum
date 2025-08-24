@@ -22,7 +22,7 @@ namespace Forum.Application.Features.PostFeatures.Queries.GetAllPosts
             CancellationToken cancellationToken)
         {
             var posts = await _postRepository
-                .GetAllPosts(cancellationToken)
+                .GetAllPosts(request.parameters, cancellationToken)
                 .ConfigureAwait(false);
 
             return _mapper.Map<IEnumerable<PostResponse>>(posts);

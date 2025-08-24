@@ -18,7 +18,8 @@ namespace Forum.Application.Features.PostFeatures.Queries.RetrievePendingPosts
 
         public async Task<IEnumerable<PostResponse>> Handle(GetPendingPostsQuery request, CancellationToken cancellationToken)
         {
-            var pendingPosts = await _postRepository.GetPendingPosts(cancellationToken)
+            var pendingPosts = await _postRepository
+                .GetPendingPosts(request.parameters, cancellationToken)
                 .ConfigureAwait(false);
             return _mapper.Map<IEnumerable<PostResponse>>(pendingPosts);
         }
