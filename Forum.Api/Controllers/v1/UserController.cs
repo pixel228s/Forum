@@ -24,15 +24,12 @@ namespace Forum.Api.Controllers.v1
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
 
         public UserController(IMediator mediator, 
-            IHttpContextAccessor httpContextAccessor,
             IMapper mapper)
         {
             _mediator = mediator;
-            _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
 

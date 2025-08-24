@@ -30,9 +30,9 @@ namespace Forum.Infrastructure.Implementations
             return comment;
         }
 
-        public Task<IQueryable<CommentWithUserInfo>> GetCommentsByPostId(int postID, bool include, RequestParameters requestParameters, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CommentWithUserInfo>> GetCommentsByPostId(int postID, bool include, RequestParameters requestParameters, CancellationToken cancellationToken)
         {
-            var comments = _dbSet
+            var comments = await _dbSet
                 .AsNoTracking()
                 .Where(x => x.PostId == postID)
                 .CustomInclude(u => u.User, include)
@@ -45,9 +45,9 @@ namespace Forum.Infrastructure.Implementations
                     UserName = comment.User.UserName!,
                     UserProfilePicUrl = comment.User.picUrl,
                 })
-                ;
+                .ToListAsync(cancellationToken);
 
-            return Task.FromResult(comments);
+            return comments;
         }
 
         public async Task<IEnumerable<Comment>> GetCommentsByUserId(int userId, CancellationToken cancellationToken)

@@ -23,7 +23,7 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
 
         public async Task<TokenDto> Handle(LoginQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByNameAsync(request.username);
+            var user = await _userManager.FindByNameAsync(request.username).ConfigureAwait(false);
             if (user != null)
             {
                 bool isPasswordCorrect = await _userManager.CheckPasswordAsync(user, request.password);
@@ -40,7 +40,7 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
                     return tokenDto;
                 }
             }
-            throw new AuthenticationException("Incorrect email or password");
+            throw new AuthenticationException("Incorrect username or password");
         }
     }
 }

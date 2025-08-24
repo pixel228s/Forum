@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Forum.Application.Common.Dtos.Comments.Responses;
 using Forum.Application.Common.Dtos.Posts.Requests;
 using Forum.Application.Common.Dtos.Posts.Responses;
 using Forum.Application.Features.PostFeatures.Commands.CreatePost;
 using Forum.Application.Features.PostFeatures.Commands.UpdatePost;
+using Forum.Domain.Entities.Comments;
 using Forum.Domain.Entities.Posts;
 using Forum.Domain.Models.Posts;
 

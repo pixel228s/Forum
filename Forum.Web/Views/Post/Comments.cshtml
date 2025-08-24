@@ -1,0 +1,82 @@
+﻿@model Forum.Web.Models.CommentsViewModel
+
+@{
+    ViewData["Title"] = "Comments";
+
+    int currentPage = Convert.ToInt32(ViewData["PageNumber"] ?? "1");
+    int pageSize = 5;
+    int totalComments = ViewData["TotalComments"] != null ? Convert.ToInt32(ViewData["TotalComments"]) : Model.Comments.Count();
+    int totalPages = (int)Math.Ceiling((double)totalComments / pageSize);
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+
+            <h3>Comments for: @Model.Post?.Title</h3>
+
+            @if (Model.Post != null)
+            {
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.Post.Title</h5>
+                        <p class="card-text">@Model.Post.Content</p>
+                        @if (!string.IsNullOrEmpty(Model.Post.ImageUrl))
+                        {
+                            <img src="@($"/S3/GetImage?key={Model.Post.ImageUrl}")"
+                                 class="img-fluid rounded mb-2" alt="Post image" />
+                        }
+                        <p class="text-muted mb-0">
+                            Created: @Model.Post.CreationDate.ToString("g") by @Model.Post.AuthorUsername
+                        </p>
+                    </div>
+                </div>
+            }
+
+            <h4>Comments</h4>
+
+            @if (Model.Comments != null && Model.Comments.Any())
+            {
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <strong>@comment.UserName</strong>:
+                            <p>@comment.Content</p>
+                            <p class="text-muted mb-0">
+                                Posted: @comment.CreationDate.ToString("g")
+                            </p>
+                        </div>
+                    </div>
+                }
+
+                <nav aria-label="Comments pagination">
+                    <ul class="pagination justify-content-center mt-3">
+                        <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                            <a class="page-link" asp-action="Comments" asp-controller="Post"
+                               asp-route-postId="@Model.Post.Id"
+                               asp-route-pageNumber="@(currentPage - 1)">Previous</a>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">Page @currentPage of @totalPages</span>
+                        </li>
+                        <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+                            <a class="page-link" asp-action="Comments" asp-controller="Post"
+                               asp-route-postId="@Model.Post.Id"
+                               asp-route-pageNumber="@(currentPage + 1)">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            else
+            {
+                <p>No comments yet.</p>
+            }
+
+            <a class="btn btn-secondary mt-3" asp-controller="Profile" asp-action="Profile">
+                Back to Profile
+            </a>
+
+        </div>
+    </div>
+</div>

@@ -1,3 +1,14 @@
+using Forum.Application.DependencyInjection;
+using Forum.Application;
+using Forum.Infrastructure.DependencyInjection;
+using Forum.Persistence;
+using Forum.Domain.Models.Users;
+using Microsoft.AspNetCore.Identity;
+using Forum.Persistence.Data;
+using Forum.Api.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Forum.Web.Helper.Middlewares;
+
 namespace Forum
 {
     public class Program
@@ -6,8 +17,27 @@ namespace Forum
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddMediatR(cfg =>
+                cfg.RegisterServicesFromAssembly(typeof(Ref).Assembly)
+            );
+
+
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services
+                  .AddEndpointsApiExplorer()
+                  .AddVersioning()
+                  .AddCachingService(builder.Configuration)
+                  .AddHealthCheckService()
+                  .AddMailSender(builder.Configuration)
+                  .AddIdentity()
+                  .AddJwtConfiguration(builder.Configuration)
+                  .AddPersistence(builder.Configuration)
+                  .AddTokenProvider()
+                  .AddCustomValidation()
+                  .addServices(builder.Configuration)
+                  .addAutoMapper()
+                  .addMediator();
 
             var app = builder.Build();
 
@@ -25,6 +55,9 @@ namespace Forum
 
             app.UseRouting();
 
+            app.UseJwtMiddleware();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

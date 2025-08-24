@@ -23,17 +23,14 @@ namespace Forum.Api.Controllers.v1
     public class PostsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
 
         public PostsController(
             IMediator mediator,
-            IHttpContextAccessor httpContextAccessor,
             IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost("create-post")]
