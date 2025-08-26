@@ -1,4 +1,5 @@
-﻿using Forum.Domain.Interfaces;
+﻿using Forum.Domain.Entities.Posts.Enums;
+using Forum.Domain.Interfaces;
 using Forum.Domain.Models.Users;
 using Forum.Domain.Parameters;
 using Forum.Persistence.Data;
@@ -40,6 +41,15 @@ namespace Forum.Infrastructure.Implementations
                 .Take(requestParameters.PageSize)
                 .ToListAsync(cancellationToken);
             return users;
+        }
+
+        public async Task<int> UpdateBannedUsers(CancellationToken cancellationToken)
+        {
+            var updatedColumns = await _forumDbContext.Users
+                .Where(u => u.BanInfo != null && u.BanInfo.BanEndDate <= DateTime.UtcNow)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(p => p.IsBanned, false),
+                    cancellationToken);
+            return updatedColumns;
         }
     }
 }
