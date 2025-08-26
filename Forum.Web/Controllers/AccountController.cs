@@ -1,10 +1,13 @@
-﻿using Forum.Application.Features.AccountFeatures.Commands.Registration;
+﻿using Forum.Application.Exceptions.Models;
+using Forum.Application.Features.AccountFeatures.Commands.Registration;
+using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.NewPassword;
+using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.SendOtp;
+using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.Validate;
 using Forum.Application.Features.AccountFeatures.Queries.Login;
 using Forum.Application.Features.AccountFeatures.Queries.Refresh;
 using Forum.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Forum.Web.Controllers
 {
@@ -15,6 +18,107 @@ namespace Forum.Web.Controllers
         public AccountController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View(new ForgotPasswordViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            await _mediator.Send(new ForgotPasswordCommand { Email = model.Email });
+
+            HttpContext.Session.SetString("ResetEmail", model.Email);
+            HttpContext.Session.SetString("ResetGeneratedAt", DateTime.UtcNow.ToString("O"));
+
+            TempData["Message"] = "OTP has been sent to your email.";
+            return RedirectToAction("ValidateOtp");
+        }
+
+        [HttpGet]
+        public IActionResult ValidateOtp()
+        {
+            return View(new ValidateOtpViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ValidateOtp(ValidateOtpViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }            
+
+            var email = HttpContext.Session.GetString("ResetEmail");
+            if (string.IsNullOrEmpty(email))
+            {
+                TempData["Error"] = "Your session expired. Please request OTP again.";
+                return RedirectToAction("ForgotPassword");
+            }
+
+            try
+            {
+                var resetToken = await _mediator.Send(new ValidateOtpCommand
+                {
+                    Email = email,
+                    Otp = model.Otp
+                });
+
+                HttpContext.Session.SetString("ResetToken", resetToken!);
+                HttpContext.Session.SetString("ResetGeneratedAt", DateTime.UtcNow.ToString("O"));
+
+                return RedirectToAction("ResetPassword");
+            }
+            catch (AppException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword()
+        {
+            return View(new ResetPasswordViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+               
+            var email = HttpContext.Session.GetString("ResetEmail");
+            var token = HttpContext.Session.GetString("ResetToken");
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            {
+                TempData["Error"] = "Your session expired. Please restart the reset process.";
+                return RedirectToAction("ForgotPassword");
+            }
+
+            await _mediator.Send(new ResetPasswordCommand
+            { 
+                Email = email,
+                ResetToken = token,
+                Password = model.Password,
+                ConfirmPassword = model.ConfirmPassword         
+            });
+
+            HttpContext.Session.Remove("ResetEmail");
+            HttpContext.Session.Remove("ResetToken");
+            HttpContext.Session.Remove("ResetGeneratedAt");
+
+            TempData["Message"] = "Your password has been successfully reset. Please login.";
+            return RedirectToAction("Login", "Account");
         }
 
         [HttpGet()]

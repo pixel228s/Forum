@@ -3,8 +3,11 @@ using MediatR;
 
 namespace Forum.Application.Features.AccountFeatures.Commands.ChangePassword
 {
-    public record ChangePasswordCommand(
-        string CurrentPassword, 
-        string NewPassword, 
-        string Email) : IRequest<ChangePasswordResponse>;
+    public record ChangePasswordCommand : IRequest<ChangePasswordResponse>
+    { 
+        public string CurrentPassword { get; set; }
+        public string RepeatPassword { get; set; }
+        public string NewPassword { get; set; }
+        public string Id { get; set; }
+    }
 }

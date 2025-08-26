@@ -17,7 +17,7 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ChangePassword
 
         public async Task<ChangePasswordResponse> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByEmailAsync(request.Email).ConfigureAwait(false);
+            var user = await _userManager.FindByIdAsync(request.Id).ConfigureAwait(false);
             if (user == null)
             {
                 throw new ObjectNotFoundException();
@@ -28,7 +28,7 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ChangePassword
                 .ConfigureAwait(false);
             if (!isPasswordCorrect)
             {
-                throw new AuthenticationException();
+                throw new AuthenticationException("Password is incorrect");
             }
 
             var result = await _userManager
@@ -36,7 +36,6 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ChangePassword
                 .ConfigureAwait(false);
             if (result.Succeeded)
             {
-                result.Succeeded.ToString();
                 return new ChangePasswordResponse();
             }
             string message = string.Join("; ", result.Errors.Select(e => e.Description));

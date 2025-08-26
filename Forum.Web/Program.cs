@@ -8,6 +8,7 @@ using Forum.Persistence.Data;
 using Forum.Api.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Forum.Web.Helper.Middlewares;
+using Forum.Api.Infrastructure.StartupConfigurations;
 
 namespace Forum
 {
@@ -17,13 +18,14 @@ namespace Forum
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddMediatR(cfg =>
-                cfg.RegisterServicesFromAssembly(typeof(Ref).Assembly)
-            );
-
-
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
             builder.Services
                   .AddEndpointsApiExplorer()
                   .AddVersioning()
@@ -53,6 +55,7 @@ namespace Forum
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseSession();
             app.UseRouting();
 
             app.UseJwtMiddleware();

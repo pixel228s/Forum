@@ -12,10 +12,9 @@ namespace Forum.Application.Features.AccountFeatures.Commands.ChangePassword
             RuleFor(p => p.NewPassword)
                 .NotEmpty().WithMessage("New password should not be left empty.");
 
-            RuleFor(c => c.Email)
-                .NotEmpty().WithMessage("Your email can't be emoty.")
-                .Matches(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,})+)$")
-                .WithMessage("Your email should be in correct format");
+            RuleFor(p => new { p.RepeatPassword, p.CurrentPassword })
+                .Must(x => x.RepeatPassword == x.RepeatPassword)
+                .WithMessage("New Password and current password should be equal");
         }
     }
 }

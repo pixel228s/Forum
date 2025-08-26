@@ -30,14 +30,12 @@ namespace Forum.Infrastructure.Implementations
             return comment;
         }
 
-        public async Task<IEnumerable<CommentWithUserInfo>> GetCommentsByPostId(int postID, bool include, RequestParameters requestParameters, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CommentWithUserInfo>> GetCommentsByPostId(int postID, bool include, CancellationToken cancellationToken)
         {
             var comments = await _dbSet
                 .AsNoTracking()
                 .Where(x => x.PostId == postID)
                 .CustomInclude(u => u.User, include)
-                .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
-                .Take(requestParameters.PageSize)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(comment => new CommentWithUserInfo
                 {

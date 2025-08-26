@@ -2,81 +2,150 @@
 
 @{
     ViewData["Title"] = "Comments";
-
-    int currentPage = Convert.ToInt32(ViewData["PageNumber"] ?? "1");
-    int pageSize = 5;
-    int totalComments = ViewData["TotalComments"] != null ? Convert.ToInt32(ViewData["TotalComments"]) : Model.Comments.Count();
-    int totalPages = (int)Math.Ceiling((double)totalComments / pageSize);
+    int totalComments = Model.Comments?.Count() ?? 0;
 }
 
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-8 offset-md-2">
-
-            <h3>Comments for: @Model.Post?.Title</h3>
-
             @if (Model.Post != null)
             {
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">@Model.Post.Title</h5>
-                        <p class="card-text">@Model.Post.Content</p>
-                        @if (!string.IsNullOrEmpty(Model.Post.ImageUrl))
-                        {
-                            <img src="@($"/S3/GetImage?key={Model.Post.ImageUrl}")"
-                                 class="img-fluid rounded mb-2" alt="Post image" />
-                        }
-                        <p class="text-muted mb-0">
-                            Created: @Model.Post.CreationDate.ToString("g") by @Model.Post.AuthorUsername
-                        </p>
-                    </div>
+                <div class="p-3 mb-4 border rounded bg-white shadow-sm">
+                    <h5 class="fw-bold mb-1">@Model.Post.Title</h5>
+                    <p class="mb-2">@Model.Post.Content</p>
+
+                    @if (!string.IsNullOrEmpty(Model.Post.ImageUrl))
+                    {
+                        <img src="@($"/S3/GetImage?key={Model.Post.ImageUrl}")"
+                             class="img-fluid rounded mb-2" alt="Post image" />
+                    }
+
+                    <small class="text-muted">
+                        Posted by <strong>@Model.Post.AuthorUsername</strong> ·
+                        @Model.Post.CreationDate.ToString("MMM dd, yyyy HH:mm")
+                    </small>
                 </div>
             }
 
-            <h4>Comments</h4>
+            <h5 class="mb-3">Comments (@totalComments total)</h5>
 
             @if (Model.Comments != null && Model.Comments.Any())
             {
-                @foreach (var comment in Model.Comments)
-                {
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <strong>@comment.UserName</strong>:
-                            <p>@comment.Content</p>
-                            <p class="text-muted mb-0">
-                                Posted: @comment.CreationDate.ToString("g")
-                            </p>
-                        </div>
-                    </div>
-                }
+                <ul class="list-unstyled">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <li class="d-flex mb-3 pb-3 border-bottom">
+                            <div class="me-3">
+                                <img src="https://ui-avatars.com/api/?name=@comment.UserName&background=random"
+                                     alt="@comment.UserName"
+                                     class="rounded-circle" style="width:40px;height:40px;" />
+                            </div>
+                            <div class="w-100">
+                                <div class="bg-light rounded px-3 py-2 d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <strong>@comment.UserName</strong>
+                                        <p class="mb-1">@comment.Content</p>
+                                        <p class="mb-1">@comment.Id</p>
+                                    </div>
+                                    <div class="ms-3">
+                                        <button class="btn btn-sm btn-outline-primary me-1 edit-btn"
+                                                data-comment-id="@comment.Id"
+                                                data-post-id="@Model.Post.Id"
+                                                data-content="@Html.Raw(Html.Encode(comment.Content))">
+                                            Edit
+                                        </button>
 
-                <nav aria-label="Comments pagination">
-                    <ul class="pagination justify-content-center mt-3">
-                        <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
-                            <a class="page-link" asp-action="Comments" asp-controller="Post"
-                               asp-route-postId="@Model.Post.Id"
-                               asp-route-pageNumber="@(currentPage - 1)">Previous</a>
+                                        <form asp-action="DeleteComment" asp-controller="Post"
+                                              asp-route-commentId="@comment.Id"
+                                              asp-route-postId="@Model.Post.Id"
+                                              method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this comment?');">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <small class="text-muted">
+                                    @comment.CreationDate.ToString("MMM dd, yyyy HH:mm")
+                                </small>
+                            </div>
                         </li>
-                        <li class="page-item disabled">
-                            <span class="page-link">Page @currentPage of @totalPages</span>
-                        </li>
-                        <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
-                            <a class="page-link" asp-action="Comments" asp-controller="Post"
-                               asp-route-postId="@Model.Post.Id"
-                               asp-route-pageNumber="@(currentPage + 1)">Next</a>
-                        </li>
-                    </ul>
-                </nav>
+                    }
+                </ul>
             }
             else
             {
-                <p>No comments yet.</p>
+                <p class="text-muted">No comments yet.</p>
             }
 
-            <a class="btn btn-secondary mt-3" asp-controller="Profile" asp-action="Profile">
-                Back to Profile
-            </a>
+            <div class="mt-4">
+                <form asp-action="CreateComment" asp-controller="Post" method="post">
+                    <input type="hidden" name="postId" value="@Model.Post!.Id" />
+                    <div class="input-group">
+                        <input type="text" name="Content" class="form-control" placeholder="Write a comment..." required />
+                        <button class="btn btn-primary" type="submit">Add</button>
+                    </div>
+                </form>
+            </div>
 
+            <button type="button" class="btn btn-secondary mt-3" onclick="history.back();">
+                Back
+            </button>
         </div>
     </div>
 </div>
+
+<div id="editDialog" class="modal" style="display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);">
+    <div style="position: relative; margin: 10% auto; padding: 20px; background: white; width: 90%; max-width: 500px; border-radius: 8px;">
+        <h5>Edit Comment</h5>
+        <form id="editForm" method="post" asp-action="EditComment" asp-controller="Post">
+            <div class="mb-3">
+                <textarea id="editContent" name="content" class="form-control" rows="4" required></textarea>
+            </div>
+            <input type="hidden" id="editCommentId" name="commentId" />
+            <input type="hidden" id="editPostId" name="postId" />
+            @Html.AntiForgeryToken()
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditDialog()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    let commentId = this.dataset.commentId;
+                    let postId = this.dataset.postId;
+                    let content = this.dataset.content;
+
+                    document.getElementById('editCommentId').value = commentId;
+                    document.getElementById('editPostId').value = postId;
+                    document.getElementById('editContent').value = content;
+
+                    document.getElementById('editDialog').style.display = 'block';
+                    document.getElementById('editContent').focus();
+                });
+            });
+        });
+
+        function closeEditDialog() {
+            document.getElementById('editDialog').style.display = 'none';
+        }
+
+        document.getElementById('editDialog').onclick = function (e) {
+            if (e.target === this) closeEditDialog();
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && document.getElementById('editDialog').style.display === 'block') {
+                closeEditDialog();
+            }
+        });
+    </script>
+}

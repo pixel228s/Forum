@@ -1,7 +1,9 @@
 ﻿using Forum.Application.Common.Behaviors;
+using Forum.Application.Features.AccountFeatures.Commands.ChangePassword;
 using Forum.Application.Features.UserFeatures.Commands.DeleteImage;
 using Forum.Application.Features.UserFeatures.Commands.UploadProfilePicture;
 using Forum.Application.Features.UserFeatures.Queries.GetUserPosts;
+using Forum.Application.Features.UserFeatures.Queries.RetrieveUserByEmail;
 using Forum.Application.Features.UserFeatures.Queries.RetrieveUserById;
 using Forum.Web.Models;
 using MediatR;
@@ -19,8 +21,54 @@ namespace Forum.Web.Controllers
             _mediator = mediator;
         }
 
+        public async Task<IActionResult> Search(string searchTerm)
+        {
+            var query = new GetUserByEmailQuery(searchTerm);
+            var user = await _mediator.Send(query);
+
+            if (User.Identity!.IsAuthenticated && user.Id == User.GetUserId())
+            {
+                return RedirectToAction("Profile");
+            }
+
+            var getUserPostsQuery = new GetUserPostsQuery(user.Id);
+            var userPosts = await _mediator.Send(getUserPostsQuery);
+            var model = new ProfileViewModel
+            {
+                UserResponse = user,
+                UserPosts = userPosts
+            };
+            return View("UserProfile", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(string oldPassword, string newPassword, string repeatPassword)
+        {
+            Console.WriteLine(oldPassword);
+            Console.WriteLine(newPassword);
+            Console.WriteLine(repeatPassword);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var command = new ChangePasswordCommand
+            {
+                Id = userId!,
+                CurrentPassword = oldPassword,
+                RepeatPassword = repeatPassword,
+                NewPassword = newPassword
+            };
+
+            var result = await _mediator.Send(command);
+            TempData["SuccessMessage"] = result.GetSuccessMessage;
+            return RedirectToAction("ChangePassword");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ChangePassword()
+        {
+            return View(new ChangePasswordViewModel());
+        }
+
         [HttpGet()]
-        public async  Task<IActionResult> Profile()
+        public async Task<IActionResult> Profile()
         {
             var UserID = User.GetUserId();
             var query = new GetUserByIdQuery(UserID);

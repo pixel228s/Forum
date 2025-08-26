@@ -1,8 +1,92 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model Forum.Web.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "All Posts";
+    int currentPage = Convert.ToInt32(ViewData["PageNumber"] ?? "1");
+    int pageSize = 5;
+    bool hasMore = Model.Posts.Count() == pageSize; 
+    string searchTerm = ViewData["SearchTerm"]?.ToString() ?? "";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+
+            @if(User.Identity!.IsAuthenticated)
+            {
+                <h3>Search Users</h3>
+                <form method="get" asp-controller="Profile" asp-action="Search" class="mb-4 d-flex">
+                    <input type="text" name="searchTerm" class="form-control me-2" placeholder="Search users..." />
+                    <button type="submit" class="btn btn-outline-primary">Search</button>
+                </form>
+
+                <h3>Create New Post</h3>
+                <form asp-controller="Post" asp-action="CreatePost" method="post" enctype="multipart/form-data" class="mb-4">
+                    <div class="mb-2">
+                        <input type="text" name="Title" class="form-control" placeholder="Post Title" required />
+                    </div>
+                    <div class="mb-2">
+                        <textarea name="Content" class="form-control" placeholder="Write your post..." rows="3" required></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" name="Image" class="form-control" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Post</button>
+                </form>
+            }
+ 
+          
+
+            <h3>All Posts</h3>
+
+            @if (Model.Posts != null && Model.Posts.Any())
+            {
+                @foreach (var post in Model.Posts)
+                {
+                    <div class="p-3 mb-4 border rounded bg-white shadow-sm">
+                        <h5 class="fw-bold mb-1">@post.Title</h5>
+                        <p class="mb-2">@post.Content</p>
+
+                        @if (!string.IsNullOrEmpty(post.ImageUrl))
+                        {
+                            <img src="@($"/S3/GetImage?key={post.ImageUrl}")"
+                                 class="img-fluid rounded mb-2" alt="Post image" />
+                        }
+
+                        <small class="text-muted">
+                            Posted by <strong>@post.AuthorUsername</strong> ·
+                            @post.CreationDate.ToString("MMM dd, yyyy HH:mm")
+                        </small>
+
+                        <div class="mt-2">
+                            <a asp-controller="Post" asp-action="Comments"
+                               asp-route-postId="@post.Id"
+                               class="btn btn-sm btn-outline-primary">
+                                Comments
+                            </a>
+                        </div>
+                    </div>
+                }
+
+                <nav aria-label="Posts pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(currentPage - 1)" asp-route-searchTerm="@searchTerm">Previous</a>
+                        </li>
+                        <li class="page-item">
+                            <span class="page-link">Page @currentPage</span>
+                        </li>
+                        <li class="page-item @(hasMore ? "" : "disabled")">
+                            <a class="page-link" asp-action="Index" asp-route-pageNumber="@(currentPage + 1)" asp-route-searchTerm="@searchTerm">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            else
+            {
+                <p class="text-muted">No posts available.</p>
+            }
+
+        </div>
+    </div>
 </div>

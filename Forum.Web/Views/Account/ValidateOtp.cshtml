@@ -1,0 +1,31 @@
+﻿@model Forum.Web.Models.ValidateOtpViewModel
+@{
+    ViewData["Title"] = "Validate OTP";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="ValidateOtp" method="post" id="otpForm">
+    <div class="form-group mb-3">
+        <label asp-for="Otp"></label>
+        <input asp-for="Otp" class="form-control" placeholder="Enter the OTP" />
+        <span asp-validation-for="Otp" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100" id="otpBtn">
+        Verify OTP
+    </button>
+</form>
+
+@section Scripts {
+    <script>
+        const otpForm = document.getElementById("otpForm");
+        const otpBtn = document.getElementById("otpBtn");
+        otpForm.addEventListener("submit", () => {
+            otpBtn.disabled = true;
+            otpBtn.innerText = "Verifying...";
+        });
+    </script>
+}

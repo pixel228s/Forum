@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Forum.Application.Common.Dtos.Auth.Requests;
 using Forum.Application.Features.AccountFeatures.Commands.ChangePassword;
 using Forum.Application.Features.AccountFeatures.Commands.Registration;
 using Forum.Application.Features.AccountFeatures.Commands.ResetPassword.NewPassword;
@@ -10,6 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace Forum.Api.Controllers.v1
 {
@@ -51,8 +53,10 @@ namespace Forum.Api.Controllers.v1
 
         [Authorize]
         [HttpPost("change-password")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request, CancellationToken cancellationToken)
         {
+            var command = _mapper.Map<ChangePasswordCommand>(request);
+            command.Id = User.FindFirstValue(ClaimTypes.NameIdentifier)!;  
             var result = await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return Ok(result);
         }

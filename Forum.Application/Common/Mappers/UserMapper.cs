@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Forum.Application.Common.Dtos.Auth.Requests;
 using Forum.Application.Common.Dtos.Users.Requests;
 using Forum.Application.Common.Dtos.Users.Responses;
+using Forum.Application.Features.AccountFeatures.Commands.ChangePassword;
 using Forum.Application.Features.AccountFeatures.Commands.Registration;
 using Forum.Application.Features.UserFeatures.Commands.UpdateUser;
 using Forum.Domain.Models.Users;
@@ -17,6 +19,8 @@ namespace Forum.Application.Common.Mappers
             CreateMap<RegisterUserCommand, User>();
 
             CreateMap<UserUpdateRequest, UpdateUserCommand>();
+
+            CreateMap<ChangePasswordRequest, ChangePasswordCommand>();
         }
     }
 }

@@ -1,0 +1,65 @@
+﻿@model Forum.Web.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container mt-4">
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card mb-4 text-center">
+                <div class="card-body">
+                    <img src="@(!string.IsNullOrEmpty(Model.UserResponse.picUrl)
+                                ? $"/S3/GetImage?key={Model.UserResponse.picUrl}"
+                                : "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png")"
+                         class="rounded-circle mb-3"
+                         style="width: 100px; height: 100px;"
+                         alt="Profile picture" />
+
+                    <h4>@Model.UserResponse.UserName</h4>
+                    <p>@Model.UserResponse.FirstName @Model.UserResponse.LastName</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h3>User Posts</h3>
+
+            @if (Model.UserPosts != null && Model.UserPosts.Any())
+            {
+                @foreach (var post in Model.UserPosts)
+                {
+                    <div class="card mb-3" id="post-@post.Id">
+                        <div class="card-body">
+                            <h5 class="card-title">@post.Title</h5>
+                            <p class="card-text">@post.Content</p>
+
+                            @if (!string.IsNullOrEmpty(post.ImageUrl))
+                            {
+                                <img src="@($"/S3/GetImage?key={post.ImageUrl}")"
+                                     class="img-fluid rounded mb-2"
+                                     alt="Post image" />
+                            }
+
+                            <p class="text-muted mb-2">
+                                Created: @post.CreationDate.ToString("g")
+                            </p>
+
+                            <a class="btn btn-outline-secondary"
+                               asp-controller="Post"
+                               asp-action="Comments"
+                               asp-route-postId="@post.Id">
+                                Comments
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>This user has not made any posts yet.</p>
+            }
+        </div>
+    </div>
+</div>

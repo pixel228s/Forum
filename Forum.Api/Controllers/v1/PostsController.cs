@@ -78,12 +78,11 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpGet("{postId}/comments")]
-        public async Task<IActionResult> GetCommentsByPostId(int postId, [FromQuery]RequestParameters parameters,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCommentsByPostId(int postId, CancellationToken cancellationToken)
         {
             var query = new GetPostCommentsByIdQuery 
             {
-                PostId = postId,
-                parameters = parameters
+                PostId = postId
             };
             var result = await _mediator.Send(query, cancellationToken)
                 .ConfigureAwait(false);
