@@ -29,7 +29,7 @@ namespace Forum.Application.Features.UserFeatures.Commands.UploadProfilePicture
 
         public async Task<Unit> Handle(UploadImageCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByIdAsync(request.UserId);
+            var user = await _userManager.FindByIdAsync(request.UserId).ConfigureAwait(false);
 
             if (user == null)
             {
@@ -58,7 +58,7 @@ namespace Forum.Application.Features.UserFeatures.Commands.UploadProfilePicture
 
             user.picUrl = urlToStore;
 
-            var result = await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(user).ConfigureAwait(false);
 
             return Unit.Value;
         }

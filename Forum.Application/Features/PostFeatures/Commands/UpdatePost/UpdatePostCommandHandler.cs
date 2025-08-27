@@ -41,8 +41,8 @@ namespace Forum.Application.Features.PostFeatures.Commands.UpdatePost
                 throw new AppException("Can't update an inactive post");
             }
 
-            post.Title = request.Title ?? post.Title;
-            post.Content = request.Content ?? post.Content;
+            post.Title = string.IsNullOrEmpty(request.Title) ? post.Title : request.Title;
+            post.Content = string.IsNullOrEmpty(request.Content) ? post.Content : request.Content;
 
             await _postRepository.UpdateEntity(post, cancellationToken).ConfigureAwait(false);
 

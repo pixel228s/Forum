@@ -1,6 +1,7 @@
 ﻿using Forum.Application.Common.Behaviors;
 using Forum.Application.Features.AccountFeatures.Commands.ChangePassword;
 using Forum.Application.Features.UserFeatures.Commands.DeleteImage;
+using Forum.Application.Features.UserFeatures.Commands.UpdateUser;
 using Forum.Application.Features.UserFeatures.Commands.UploadProfilePicture;
 using Forum.Application.Features.UserFeatures.Queries.GetUserPosts;
 using Forum.Application.Features.UserFeatures.Queries.RetrieveUserByEmail;
@@ -65,6 +66,22 @@ namespace Forum.Web.Controllers
         public async Task<IActionResult> ChangePassword()
         {
             return View(new ChangePasswordViewModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUser(string id, string username, string email)
+        {
+            Console.WriteLine(id);
+            Console.WriteLine(username);
+            Console.WriteLine(email);
+            var command = new UpdateUserCommand
+            {
+                Id = id,
+                UserName = username,
+                Email = email
+            };
+            await _mediator.Send(command);
+            return RedirectToAction("Profile");
         }
 
         [HttpGet()]

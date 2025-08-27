@@ -20,16 +20,16 @@ namespace Forum.Application.Features.UserFeatures.Commands.UpdateUser
 
         public async Task<UserResponse> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.FindByIdAsync(request.Id);
+            var user = await _userManager.FindByIdAsync(request.Id).ConfigureAwait(false);
 
             if (user == null)
             {
                 throw new ObjectNotFoundException();
             }
 
-            if (request.Email != null)
+            if (!string.IsNullOrEmpty(request.Email))
             {
-                var existingUser = await _userManager.FindByEmailAsync(request.Email);
+                var existingUser = await _userManager.FindByEmailAsync(request.Email).ConfigureAwait(false);
                 if (existingUser != null)
                 {
                     throw new ConflictException("User with this Email/Username already exists.");
@@ -37,9 +37,9 @@ namespace Forum.Application.Features.UserFeatures.Commands.UpdateUser
                 user.Email = request.Email;
             }
 
-            if (request.UserName != null)
+            if (!string.IsNullOrEmpty(request.UserName))
             {
-                var existingUser = await _userManager.FindByNameAsync(request.UserName);
+                var existingUser = await _userManager.FindByNameAsync(request.UserName).ConfigureAwait(false);
                 if (existingUser != null)
                 {
                     throw new ConflictException("User with this Email/Username already exists.");
