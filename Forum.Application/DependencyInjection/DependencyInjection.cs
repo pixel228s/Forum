@@ -5,6 +5,7 @@ using Forum.Application.Common.EmailSender;
 using Forum.Application.Common.SecurityService;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Forum.Application.Common.RevokeExpiredBans;
 
 namespace Forum.Application.DependencyInjection
 {
@@ -35,6 +36,12 @@ namespace Forum.Application.DependencyInjection
         public static IServiceCollection AddTokenProvider(this IServiceCollection services)
         {
             services.AddScoped<ITokenProvider, TokenProvider>();
+            return services;
+        }
+
+        public static IServiceCollection AddBanService(this IServiceCollection services)
+        {
+            services.AddScoped<IBanService, BanService>();
             return services;
         }
 

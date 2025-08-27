@@ -34,10 +34,11 @@ namespace Forum.Api.Controllers.v1
         }
 
         [HttpPut("{banId}")]
-        public async Task<IActionResult> UpdateBanInfo(int banId, [FromBody] UpdateBanInfo request, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateBanInfo(int userId, int banId, [FromBody] UpdateBanInfo request, CancellationToken cancellationToken)
         {
             var command = _mapper.Map<UpdateBanCommand>(request);
             command.Id = banId;
+            command.UserId = userId;
             var result = await _mediator.Send(command, cancellationToken)
                 .ConfigureAwait(false);
             return Ok(result);

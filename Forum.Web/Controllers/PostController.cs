@@ -10,6 +10,7 @@ using Forum.Application.Features.PostFeatures.Queries.RetrievePostComments;
 using Forum.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Forum.Web.Controllers
 {
@@ -107,7 +108,7 @@ namespace Forum.Web.Controllers
             var command = new DeletePostCommand
             {
                 PostId = postId,
-                UserId = User.GetUserId(),
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!,
             };
             await _mediator.Send(command);
             return RedirectToAction("Profile", "Profile");

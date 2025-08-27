@@ -14,5 +14,9 @@ namespace Forum.Application.Common.Dtos.Users.Responses
         public string LastName { get; set; }
         [JsonPropertyName("pic_url")]
         public string? picUrl { get; set; }
+        [JsonPropertyName("email")]
+        public string? Email { get; set; }
+        [JsonPropertyName("is_banned")]
+        public bool IsBanned { get; set; }
     }
 }

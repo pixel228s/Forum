@@ -47,7 +47,7 @@ namespace Forum.Worker
                     using var service = _serviceProvider.CreateScope();
                     var requiredService = service.ServiceProvider
                         .GetRequiredService<IPostRepository>();
-                    await requiredService.DeactivatePosts(stoppingToken);
+                    await requiredService.DeactivatePosts(stoppingToken).ConfigureAwait(false);
                 }
                 catch(Exception ex) 
                 {

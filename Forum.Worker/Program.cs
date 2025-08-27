@@ -1,3 +1,4 @@
+using Forum.Application.DependencyInjection;
 using Forum.Infrastructure.DependencyInjection;
 using Forum.Persistence;
 
@@ -10,6 +11,7 @@ namespace Forum.Worker
             var builder = Host.CreateApplicationBuilder(args);
             builder.Services.AddPersistence(builder.Configuration)
                       .addServices(builder.Configuration)
+                      .AddBanService()
                       .AddHostedService<RevokeExpiredBansWorker>()
                       .AddHostedService<InactivateExpiredPosts>();
 

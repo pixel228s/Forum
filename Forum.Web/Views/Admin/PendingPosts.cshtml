@@ -1,0 +1,69 @@
+﻿@model Forum.Web.Models.PendingPostsViewModel
+
+@{
+    ViewData["Title"] = "Pending Posts";
+    int currentPage = Model.CurrentPage;
+    int pageSize = 5;
+    bool hasMore = Model.PostResponses.Count() == pageSize;
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+
+            <h3>Pending Posts</h3>
+
+            @if (Model.PostResponses != null && Model.PostResponses.Any())
+            {
+                @foreach (var post in Model.PostResponses)
+                {
+                    <div class="p-3 mb-4 border rounded bg-white shadow-sm">
+                        <h5 class="fw-bold mb-1">@post.Title</h5>
+                        <p class="mb-2">@post.Content</p>
+
+                        @if (!string.IsNullOrEmpty(post.ImageUrl))
+                        {
+                            <img src="@($"/S3/GetImage?key={post.ImageUrl}")"
+                                 class="img-fluid rounded mb-2" alt="Post image" />
+                        }
+
+                        <small class="text-muted">
+                            Posted by <strong>@post.AuthorUsername</strong> ·
+                            @post.CreationDate.ToString("MMM dd, yyyy HH:mm")
+                        </small>
+
+                        <div class="mt-2">
+                            <form asp-action="ApprovePost" asp-controller="Admin" method="post" style="display:inline;">
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                            </form>
+                            <form asp-action="RejectPost" asp-controller="Admin" method="post" style="display:inline; margin-left:5px;">
+                                <input type="hidden" name="postId" value="@post.Id" />
+                                <button type="submit" class="btn btn-sm btn-danger">Reject</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+
+                <nav aria-label="Pending posts pagination">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                            <a class="page-link" asp-action="PendingPosts" asp-route-page="@(currentPage - 1)">Previous</a>
+                        </li>
+                        <li class="page-item">
+                            <span class="page-link">Page @currentPage</span>
+                        </li>
+                        <li class="page-item @(hasMore ? "" : "disabled")">
+                            <a class="page-link" asp-action="PendingPosts" asp-route-page="@(currentPage + 1)">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            }
+            else
+            {
+                <p class="text-muted">No pending posts available.</p>
+            }
+
+        </div>
+    </div>
+</div>

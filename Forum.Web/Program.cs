@@ -44,13 +44,17 @@ namespace Forum
             var app = builder.Build();
 
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+
+            //if (!app.Environment.IsDevelopment())
+            //{
+            //    app.UseExceptionHandler("/Error");
+            //    app.UseHsts();
+            //}
+            //else
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //app.UseHsts();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -58,9 +62,13 @@ namespace Forum
             app.UseSession();
             app.UseRouting();
 
-            app.UseJwtMiddleware();
+            app.UseMiddleware<WebExceptionMiddleware>();
 
+            app.UseJwtMiddleware();
             app.UseAuthentication();
+
+            app.UseMiddleware<CheckBanWebMiddleware>();
+
             app.UseAuthorization();
 
             app.MapControllerRoute(

@@ -8,6 +8,7 @@ using Forum.Application.Features.UserFeatures.Queries.GetAllUsers;
 using Forum.Application.Features.UserFeatures.Queries.GetUserPosts;
 using Forum.Application.Features.UserFeatures.Queries.RetrieveUserByEmail;
 using Forum.Application.Features.UserFeatures.Queries.RetrieveUserById;
+using Forum.Application.Features.UserFeatures.Queries.UserCount;
 using Forum.Domain.Parameters;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -127,6 +128,17 @@ namespace Forum.Api.Controllers.v1
             };
             var result = await _mediator.Send(query, cancellationToken).ConfigureAwait(false);
             return Ok(result);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("count")]
+        public async Task<IActionResult> GetUserCount(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetUserCountQuery(), cancellationToken).ConfigureAwait(false);
+            return Ok(new 
+            { 
+                UserCount = result 
+            });
         }
     }
 }

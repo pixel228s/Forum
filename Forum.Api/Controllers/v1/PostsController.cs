@@ -14,6 +14,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace Forum.Api.Controllers.v1
 {
@@ -62,7 +63,7 @@ namespace Forum.Api.Controllers.v1
             var command = new DeletePostCommand
             {
                 PostId = postId,
-                UserId = User.GetUserId()
+                UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!
             };
             await _mediator.Send(command, cancellationToken).ConfigureAwait(false);
             return NoContent();

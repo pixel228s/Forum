@@ -7,7 +7,7 @@ namespace Forum.Domain.Interfaces
     {
         Task<Ban?> GetBanById (int id, CancellationToken cancellationToken);
         Task<IEnumerable<Ban>> GetAllBans(RequestParameters requestParameters, CancellationToken cancellationToken);
-        Task<IEnumerable<Ban>> GetExpiredBans(CancellationToken cancellationToken);
+        Task<IEnumerable<int>> GetExpiredBans(CancellationToken cancellationToken);
         Task<int> DeleteExpiredBans(CancellationToken cancellationToken);
     }
 }

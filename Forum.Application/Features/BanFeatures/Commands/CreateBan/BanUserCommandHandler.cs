@@ -1,15 +1,13 @@
 ﻿using AutoMapper;
 using Forum.Application.Common.Dtos.BanInfo.Responses;
 using Forum.Application.Exceptions;
-using Forum.Application.Exceptions.Models;
 using Forum.Domain.Interfaces;
 using Forum.Domain.Models;
 using Forum.Domain.Models.Users;
-using Forum.Infrastructure.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
-using Newtonsoft.Json;
+
 
 namespace Forum.Application.Features.AdminFeatures.Commands.BanUser
 {
@@ -59,7 +57,7 @@ namespace Forum.Application.Features.AdminFeatures.Commands.BanUser
             {
                 await _banRepository.AddAsync(ban, cancellationToken).ConfigureAwait(false);
 
-                var ttl = request.BanEndDate - DateTime.UtcNow;
+                var ttl = request.BanEndDate - DateTime.Now;
                 var options = new DistributedCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = ttl

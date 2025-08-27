@@ -1,4 +1,5 @@
 ﻿using Forum.Domain.Entities.Comments;
+using Forum.Domain.Models;
 using Forum.Domain.Models.Base;
 using Forum.Domain.Models.Posts;
 using Forum.Domain.Models.Users;
@@ -17,6 +18,7 @@ namespace Forum.Persistence.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }    
+        public DbSet<Ban> BanInfos { get; set; }    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,10 +46,10 @@ namespace Forum.Persistence.Data
             {
                 if (entity.State == EntityState.Added)
                 {
-                    entity.Entity.CreatedAt = DateTime.UtcNow;
+                    entity.Entity.CreatedAt = DateTime.Now;
                 }
 
-                entity.Entity.UpdatedAt = DateTime.UtcNow;
+                entity.Entity.UpdatedAt = DateTime.Now;
             }
         }
     }

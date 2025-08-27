@@ -4,7 +4,7 @@
     ViewData["Title"] = "All Posts";
     int currentPage = Convert.ToInt32(ViewData["PageNumber"] ?? "1");
     int pageSize = 5;
-    bool hasMore = Model.Posts.Count() == pageSize; 
+    bool hasMore = Model.Posts.Count() == pageSize;
     string searchTerm = ViewData["SearchTerm"]?.ToString() ?? "";
 }
 
@@ -12,7 +12,7 @@
     <div class="row">
         <div class="col-md-8 offset-md-2">
 
-            @if(User.Identity!.IsAuthenticated)
+            @if (User.Identity!.IsAuthenticated)
             {
                 <h3>Search Users</h3>
                 <form method="get" asp-controller="Profile" asp-action="Search" class="mb-4 d-flex">
@@ -34,8 +34,8 @@
                     <button type="submit" class="btn btn-primary">Add Post</button>
                 </form>
             }
- 
-          
+
+
 
             <h3>All Posts</h3>
 

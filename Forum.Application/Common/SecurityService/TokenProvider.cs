@@ -44,8 +44,8 @@ namespace Forum.Application.Common.SecurityService
                 issuer: authConfigs["Issuer"],
                 audience: authConfigs["Audience"],
                 claims,
-                notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddMinutes(10),
+                notBefore: DateTime.Now,
+                expires: DateTime.Now.AddMinutes(10),
                 signInCredentials
             );
 

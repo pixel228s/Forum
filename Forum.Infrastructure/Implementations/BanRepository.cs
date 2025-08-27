@@ -28,11 +28,12 @@ namespace Forum.Infrastructure.Implementations
                 .FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Ban>> GetExpiredBans(CancellationToken cancellationToken)
+        public async Task<IEnumerable<int>> GetExpiredBans(CancellationToken cancellationToken)
         {
             var expiredBans = await _dbSet
                 .AsNoTracking()
-                .Where(x => x.BanEndDate > DateTime.UtcNow)
+                .Where(x => x.BanEndDate < DateTime.Now)
+                .Select(x => x.UserId)
                 .ToListAsync(cancellationToken);
             return expiredBans;
         }
@@ -40,7 +41,7 @@ namespace Forum.Infrastructure.Implementations
         public async Task<int> DeleteExpiredBans(CancellationToken cancellationToken)
         {
             var deletedColumns = await 
-                _dbSet.Where(x => x.BanEndDate <= DateTime.UtcNow)
+                _dbSet.Where(x => x.BanEndDate < DateTime.Now)
                 .ExecuteDeleteAsync(cancellationToken);
             return deletedColumns;
         }

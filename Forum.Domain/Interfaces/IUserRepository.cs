@@ -9,5 +9,6 @@ namespace Forum.Domain.Interfaces
         Task<User?> GetUserByEmail(string email, CancellationToken cancellationToken);
         Task<IEnumerable<User>> GetAllUsers(RequestParameters requestParameters, CancellationToken cancellationToken);
         Task<int> UpdateBannedUsers(CancellationToken cancellationToken);
+        Task<int> GetUserNumber(CancellationToken cancellationToken);
     }
 }

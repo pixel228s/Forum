@@ -8,6 +8,7 @@ using Forum.Application.Features.AccountFeatures.Queries.Refresh;
 using Forum.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Forum.Web.Controllers
 {
@@ -136,8 +137,10 @@ namespace Forum.Web.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
-
+            }
+                
             try
             {
                 var token = await _mediator.Send(new LoginQuery(model.Username, model.Password));
@@ -156,7 +159,7 @@ namespace Forum.Web.Controllers
                     SameSite = SameSiteMode.Strict,
                     Secure = true,
                     Expires = DateTime.UtcNow.AddDays(7)
-                });      
+                });
 
                 return RedirectToAction("Index", "Home");
             }
@@ -246,6 +249,8 @@ namespace Forum.Web.Controllers
                 {
                     HttpOnly = true,
                     Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddDays(7)
                 });
 
                 return RedirectToAction("Index", "Home");

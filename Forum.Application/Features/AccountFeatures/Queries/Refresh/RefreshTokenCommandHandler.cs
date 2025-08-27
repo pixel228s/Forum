@@ -26,7 +26,7 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Refresh
 
             if (user == null
                 || user.RefreshToken != request.RefreshToken
-                || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+                || user.RefreshTokenExpiryTime <= DateTime.Now)
             {
                 throw new AppException();
             }

@@ -35,7 +35,7 @@ namespace Forum.Application.Features.AccountFeatures.Queries.Login
                         .ConfigureAwait(false);
 
                     user.RefreshToken = tokenDto.RefreshToken;
-                    user.RefreshTokenExpiryTime  = DateTime.UtcNow.AddDays(7);
+                    user.RefreshTokenExpiryTime  = DateTime.Now.AddDays(7);
                     await _userManager.UpdateAsync(user).ConfigureAwait(false);
                     return tokenDto;
                 }

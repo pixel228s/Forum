@@ -18,23 +18,22 @@ namespace Forum.Infrastructure.Implementations
 
         public async Task DeactivatePosts(CancellationToken cancellationToken)
         {
-            DateTime difference = DateTime.UtcNow.AddDays(-7);
+            DateTime difference = DateTime.Now.AddDays(-7);
             await _dbSet
-                .Where(p => p.Status == Status.Active)
-                .Where(p => !p.comments!.Any() && p.CreatedAt < difference 
-                || p.comments!.Any() && p.comments!.Max(c => c.CreatedAt) < difference)
-                .ExecuteUpdateAsync(
-                    setters => setters.SetProperty(p => p.Status, Status.Inactive),
-                    cancellationToken);
+                  .Where(p => p.Status == Status.Active)
+                  .Where(p => !p.comments!.Any() && p.CreatedAt < difference)
+                  .ExecuteUpdateAsync(
+                      setters => setters.SetProperty(p => p.Status, Status.Inactive),
+                      cancellationToken);
         }
 
         public async Task<IEnumerable<PostWithCommentCount>> GetAllPosts(RequestParameters requestParameters, CancellationToken cancellationToken)
         {
             var posts = await _dbSet
                 .AsNoTracking()
+                .OrderByDescending(x => x.CreatedAt)
                 .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
                 .Take(requestParameters.PageSize)
-                .OrderByDescending(x => x.CreatedAt)
                 .Select(post => new PostWithCommentCount
                 {
                     post = post,
@@ -54,9 +53,9 @@ namespace Forum.Infrastructure.Implementations
                 _dbSet
                 .AsNoTracking()
                 .IgnoreQueryFilters()
+                .Where(x => x.State == State.Pending)
                 .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
                 .Take(requestParameters.PageSize)
-                .Where(x => x.State == State.Pending)
                 .ToListAsync(cancellationToken);
 
             return hiddenPosts;
@@ -78,8 +77,8 @@ namespace Forum.Infrastructure.Implementations
         {
             var posts = await _dbSet
                 .AsNoTracking()
-                .OrderByDescending(x => x.CreatedAt)
                 .Where(x => x.UserId == userId)
+                .OrderByDescending(x => x.CreatedAt)
                 .ToListAsync(cancellationToken);
 
             return posts;

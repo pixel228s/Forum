@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Forum.Application.Exceptions;
 using Forum.Domain.Models.Users;
-using Forum.Infrastructure.Services.S3;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;

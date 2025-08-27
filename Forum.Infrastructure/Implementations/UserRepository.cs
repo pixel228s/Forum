@@ -37,6 +37,7 @@ namespace Forum.Infrastructure.Implementations
         {
             var users = await _forumDbContext.Users
                 .AsNoTracking()
+                .Where(x => !x.IsAdmin)
                 .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
                 .Take(requestParameters.PageSize)
                 .ToListAsync(cancellationToken);
@@ -46,10 +47,18 @@ namespace Forum.Infrastructure.Implementations
         public async Task<int> UpdateBannedUsers(CancellationToken cancellationToken)
         {
             var updatedColumns = await _forumDbContext.Users
-                .Where(u => u.BanInfo != null && u.BanInfo.BanEndDate <= DateTime.UtcNow)
+                .Where(u => u.BanInfo != null && u.BanInfo.BanEndDate < DateTime.Now)
                 .ExecuteUpdateAsync(setters => setters.SetProperty(p => p.IsBanned, false),
                     cancellationToken);
             return updatedColumns;
+        }
+
+        public Task<int> GetUserNumber(CancellationToken cancellationToken)
+        {
+            var number = _forumDbContext.Users
+                .Where(u => !u.IsAdmin)
+                .CountAsync(cancellationToken);
+            return number;
         }
     }
 }

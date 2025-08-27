@@ -7,7 +7,7 @@ namespace Forum.Application.Features.AdminFeatures.Commands.UpdateBan
         public UpdateBanCommandValidator() 
         {
             RuleFor(x => x.BannedUntil)
-               .Must(x => x == null || x > DateTime.UtcNow)
+               .Must(x => x == null || x > DateTime.Now)
                .WithMessage("Ban End Date can not be in the past");
 
             RuleFor(x => x.BanReason)

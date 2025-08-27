@@ -10,7 +10,7 @@ namespace Forum.Application.Features.AdminFeatures.Commands.CreateBan
             RuleFor(x => x.BanEndDate)
                 .NotEmpty()
                 .WithMessage("please input ban end date")
-                .Must(x => x > DateTime.UtcNow)
+                .Must(x => x > DateTime.Now)
                 .WithMessage("Ban End Date can not be in the past");
 
             RuleFor(x => x.BanReason)

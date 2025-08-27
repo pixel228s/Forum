@@ -1,3 +1,4 @@
+using Forum.Application.Common.RevokeExpiredBans;
 using Forum.Domain.Interfaces;
 
 namespace Forum.Worker
@@ -46,8 +47,9 @@ namespace Forum.Worker
                 {
                     using var service = _serviceProvider.CreateScope();
                     var requiredService = service.ServiceProvider
-                        .GetRequiredService<IBanRepository>();
-                    int columns = await requiredService.DeleteExpiredBans(stoppingToken);
+                        .GetRequiredService<IBanService>();
+
+                    await requiredService.RevokeExpiredBans(stoppingToken).ConfigureAwait(false);
                 }
                 catch(Exception ex) 
                 {
