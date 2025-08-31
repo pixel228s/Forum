@@ -8,7 +8,6 @@ using Forum.Application.Features.AccountFeatures.Queries.Refresh;
 using Forum.Web.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Forum.Web.Controllers
 {
@@ -36,7 +35,7 @@ namespace Forum.Web.Controllers
             await _mediator.Send(new ForgotPasswordCommand { Email = model.Email });
 
             HttpContext.Session.SetString("ResetEmail", model.Email);
-            HttpContext.Session.SetString("ResetGeneratedAt", DateTime.UtcNow.ToString("O"));
+            HttpContext.Session.SetString("ResetGeneratedAt", DateTime.Now.ToString("O"));
 
             TempData["Message"] = "OTP has been sent to your email.";
             return RedirectToAction("ValidateOtp");
@@ -158,7 +157,7 @@ namespace Forum.Web.Controllers
                     HttpOnly = true,
                     SameSite = SameSiteMode.Strict,
                     Secure = true,
-                    Expires = DateTime.UtcNow.AddDays(7)
+                    Expires = DateTime.Now.AddDays(7)
                 });
 
                 return RedirectToAction("Index", "Home");
@@ -242,7 +241,7 @@ namespace Forum.Web.Controllers
                     HttpOnly = true,
                     SameSite = SameSiteMode.Strict,
                     Secure = true,
-                    Expires = DateTime.UtcNow.AddMinutes(7)
+                    Expires = DateTime.Now.AddMinutes(7)
                 });
 
                 HttpContext.Response.Cookies.Append("refreshToken", newToken.RefreshToken, new CookieOptions
@@ -250,7 +249,7 @@ namespace Forum.Web.Controllers
                     HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddDays(7)
+                    Expires = DateTime.Now.AddDays(7)
                 });
 
                 return RedirectToAction("Index", "Home");
