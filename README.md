@@ -1,4 +1,4 @@
-# Blog & Forum Web Application (.NET 8)
+# Blog Web Application (.NET 8)
 
 A blog web application built with ASP.NET Core 8, featuring secure authentication, content posting, admin controls, and background processing. Includes both a RESTful API and an MVC-based UI.
 
