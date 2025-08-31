@@ -1,31 +1,31 @@
-# 📝 Blog & Forum Web Application (.NET 8)
+# Blog & Forum Web Application (.NET 8)
 
 A blog web application built with ASP.NET Core 8, featuring secure authentication, content posting, admin controls, and background processing. Includes both a RESTful API and an MVC-based UI.
 
 ---
 
-## 🚀 Features
+## Features
 
-- 🔐 **Authentication & Authorization**
+-**Authentication & Authorization**
   - JWT + Refresh Token system using ASP.NET Core Identity
   - OTP-based password reset via MailKit
 
-- 🛠️ **Admin Controls**
+- **Admin Controls**
   - Admin users can ban/unban users
   - Banned users cached in **Redis**
   - Access restricted via custom **middleware**
 
-- ⏳ **Background Services**
+-  **Background Services**
   - Auto-remove expired bans
   - Archive inactive topics
 
-- 🧱 **Architecture & Design**
+- **Architecture & Design**
   - **Mediator pattern** via MediatR for decoupled logic
   - **AutoMapper** for object mapping
   - Clean separation of layers (API, Services, Data, UI)
 
 ---
-🧪 Tech Stack
+  Tech Stack
 --.NET 8 (ASP.NET Core)
 --Entity Framework Core
 --MediatR
@@ -38,9 +38,10 @@ A blog web application built with ASP.NET Core 8, featuring secure authenticatio
 --xUnit/Moq
 ---
 
-⚙️ Setup Instructions
+==Setup Instructions==
 
-⚠️ appsettings.json and other secrets are ignored in version control for security reasons.
+ 
+appsettings.json and other secrets are ignored in version control for security reasons.
 
 1. Clone the Repo
 git clone https://github.com/pixel228s/Forum.git
@@ -51,7 +52,7 @@ dotnet restore
 
 3. Add Configuration Files
 
-### 🛠️ Example `appsettings.json` (structure may vary)
+### Example `appsettings.json` (structure may vary)
 
 ```json
 {
